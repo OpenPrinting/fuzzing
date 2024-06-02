@@ -1,5 +1,5 @@
 # fuzzing
-This repository is used for fuzzing OpenPrinting projects. It contains fuzz harnesses, corpus and documentation for (OSS-Fuzz)[https://github.com/google/oss-fuzz] workflow. 
+This repository is used for fuzzing OpenPrinting projects. It contains fuzz harnesses, corpus and documentation for [OSS-Fuzz](https://github.com/google/oss-fuzz) workflow. 
 
 ## OpenPrinting projects
 
