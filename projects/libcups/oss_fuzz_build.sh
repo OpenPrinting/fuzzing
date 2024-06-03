@@ -16,7 +16,7 @@
 ################################################################################
 
 # prepare fuzz dir
-cp -r $SRC/fuzzing/projects/libcups/ $SRC/libcups/ossfuzz/
+cp -r $SRC/fuzzing/projects/libcups/fuzzer $SRC/libcups/oss-fuzz/
 
 # build project
 cd $SRC/libcups
@@ -32,13 +32,13 @@ fi
 make
 
 # build fuzzers
-pushd ossfuzz/
+pushd oss-fuzz/
 make
-make ossfuzz
+make oss-fuzz
 popd
 
 # prepare corpus
-pushd $SRC/libcups/ossfuzz/seeds/
+pushd $SRC/fuzzing/projects/libcups/seeds
 for seed_folder in *; do
     zip -r $seed_folder.zip $seed_folder
 done
