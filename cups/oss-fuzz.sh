@@ -1,25 +1,24 @@
 #!/bin/bash -eu
 
-# build project
+# Set fPIE
 export CFLAGS="$CFLAGS -fPIE"
 export CXXFLAGS="$CFLAGS -fPIE"
 export LDFLAGS="$CFLAGS -fPIE"
 
 ./configure --enable-static --disable-shared
-make
+make -j$(nproc)
 
-# build fuzzers
-pushd $SRC/cups/oss-fuzz/
+# Build fuzzers
+pushd $SRC/cups/fuzzing/cups/
 make
-cp FuzzCUPS $OUT/FuzzCUPS
-cp FuzzIPP $OUT/FuzzIPP
-cp FuzzRaster $OUT/FuzzRaster
+cp fuzz_cups $OUT/fuzz_cups
+cp fuzz_ipp $OUT/fuzz_ipp
+cp fuzz_raster $OUT/fuzz_raster
 popd
 
-# prepare corpus
-pushd $SRC/fuzzing/projects/cups/seeds/
-for seed_folder in *; do
-    zip -r $seed_folder.zip $seed_folder
-done
-cp *.zip $OUT
+# Prepare corpus
+pushd $SRC/cups/fuzzing/cups/
+zip -r $OUT/fuzz_cups_seed_corpus.zip fuzz_cups_seed_corpus/
+zip -r $OUT/fuzz_ipp_seed_corpus.zip fuzz_ipp_seed_corpus/
+zip -r $OUT/fuzz_raster_seed_corpus.zip fuzz_raster_seed_corpus/
 popd
