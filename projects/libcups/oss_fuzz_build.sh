@@ -16,7 +16,7 @@
 ################################################################################
 
 # prepare fuzz dir
-cp -r $SRC/fuzzing/projects/libcups/fuzzer $SRC/libcups/oss-fuzz/
+cp -r $SRC/fuzzing/projects/libcups/fuzzer $SRC/libcups/ossfuzz/
 
 # build project
 cd $SRC/libcups
@@ -30,9 +30,9 @@ export LDFLAGS="-fsanitize=$SANITIZER"
 make
 
 # build fuzzers
-pushd oss-fuzz/
+pushd ossfuzz/
 make
-make oss-fuzz
+make ossfuzz
 popd
 
 # prepare corpus
