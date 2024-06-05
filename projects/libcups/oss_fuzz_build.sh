@@ -28,6 +28,12 @@ if [[ $SANITIZER = "address" ]]; then
     export LDFLAGS="-fsanitize=address"
 fi
 
+if [[ $SANITIZER = "memory" ]]; then
+    export CFLAGS="$CFLAGS -fsanitize=memory"
+    export CXXFLAGS="$CXXFLAGS -fsanitize=memory"
+    export LDFLAGS="-fsanitize=memory"
+fi
+
 ./configure
 make
 
