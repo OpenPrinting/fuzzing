@@ -22,9 +22,11 @@ cp -r $SRC/fuzzing/projects/libcups/fuzzer $SRC/libcups/ossfuzz/
 cd $SRC/libcups
 git submodule update --init --recursive
 
-export CFLAGS="$CFLAGS -fsanitize=$SANITIZER"
-export CXXFLAGS="$CXXFLAGS -fsanitize=$SANITIZER"
-export LDFLAGS="-fsanitize=$SANITIZER"
+if [[ $SANITIZER != "coverage" ]]; then
+    export CFLAGS="$CFLAGS -fsanitize=$SANITIZER"
+    export CXXFLAGS="$CXXFLAGS -fsanitize=$SANITIZER"
+    export LDFLAGS="-fsanitize=$SANITIZER"
+fi
 
 ./configure
 make
