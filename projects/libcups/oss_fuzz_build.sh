@@ -22,17 +22,9 @@ cp -r $SRC/fuzzing/projects/libcups/fuzzer $SRC/libcups/oss-fuzz/
 cd $SRC/libcups
 git submodule update --init --recursive
 
-if [[ $SANITIZER = "address" ]]; then
-    export CFLAGS="$CFLAGS -fsanitize=address"
-    export CXXFLAGS="$CXXFLAGS -fsanitize=address"
-    export LDFLAGS="-fsanitize=address"
-fi
-
-if [[ $SANITIZER = "memory" ]]; then
-    export CFLAGS="$CFLAGS -fsanitize=memory"
-    export CXXFLAGS="$CXXFLAGS -fsanitize=memory"
-    export LDFLAGS="-fsanitize=memory"
-fi
+export CFLAGS="$CFLAGS -fsanitize=$SANITIZER"
+export CXXFLAGS="$CXXFLAGS -fsanitize=$SANITIZER"
+export LDFLAGS="-fsanitize=$SANITIZER"
 
 ./configure
 make
