@@ -6,7 +6,7 @@ export CXXFLAGS="$CFLAGS -fPIE"
 export LDFLAGS="$CFLAGS -fPIE"
 
 ./configure --enable-static --disable-shared
-make -j$(nproc)
+make # -j$(nproc)
 
 # Build fuzzers
 pushd $SRC/cups/fuzzing/cups/
