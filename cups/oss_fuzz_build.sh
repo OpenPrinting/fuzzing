@@ -9,7 +9,7 @@ export LDFLAGS="$CFLAGS -fPIE"
 make # -j$(nproc)
 
 # Build fuzzers
-pushd $SRC/cups/fuzzing/cups/
+pushd $SRC/fuzzing/cups/
 make
 cp fuzz_cups $OUT/fuzz_cups
 cp fuzz_ipp $OUT/fuzz_ipp

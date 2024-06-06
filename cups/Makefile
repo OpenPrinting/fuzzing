@@ -2,7 +2,7 @@ CUPS=fuzz_cups
 IPP=fuzz_ipp
 RES=fuzz_raster
 
-BUILDTOP=./../../
+BUILDTOP=./../../cups
 
 INCLUDE=\
 	-I$(BUILDTOP)\
