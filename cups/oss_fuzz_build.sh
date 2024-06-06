@@ -23,7 +23,7 @@ cp fuzz_raster $OUT/fuzz_raster
 popd
 
 # Prepare corpus
-pushd $SRC/cups/fuzzing/cups/
+pushd $SRC/fuzzing/cups/
 zip -r $OUT/fuzz_cups_seed_corpus.zip fuzz_cups_seed_corpus/
 zip -r $OUT/fuzz_ipp_seed_corpus.zip fuzz_ipp_seed_corpus/
 zip -r $OUT/fuzz_raster_seed_corpus.zip fuzz_raster_seed_corpus/
