@@ -5,6 +5,12 @@ export CFLAGS="$CFLAGS -fPIE"
 export CXXFLAGS="$CFLAGS -fPIE"
 export LDFLAGS="$CFLAGS -fPIE"
 
+if [[ $SANITIZER != "coverage" ]]; then
+    export CFLAGS="$CFLAGS -fsanitize=$SANITIZER"
+    export CXXFLAGS="$CXXFLAGS -fsanitize=$SANITIZER"
+    export LDFLAGS="-fsanitize=$SANITIZER"
+fi
+
 ./configure --enable-static --disable-shared
 make # -j$(nproc)
 
