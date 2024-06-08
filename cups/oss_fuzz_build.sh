@@ -15,11 +15,17 @@ elif [[ $SANITIZER == "undefined" ]]; then
     export LDFLAGS="-fno-sanitize=function"
 fi
 
+# Show build version
+echo "CUPS version: $(git rev-parse HEAD)"
+
+# Build CUPS
 ./configure --enable-static --disable-shared
 make # -j$(nproc)
 
-# Build fuzzers
 pushd $SRC/fuzzing/cups/
+# Show fuzzer version
+echo "OpenPrinting/fuzzing version: $(git rev-parse HEAD)"
+# Build fuzzers
 make
 cp fuzz_cups $OUT/fuzz_cups
 cp fuzz_ipp $OUT/fuzz_ipp

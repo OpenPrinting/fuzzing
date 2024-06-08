@@ -15,6 +15,11 @@
 #
 ################################################################################
 
+# show fuzzing version
+pushd $SRC/fuzzing/
+echo "libcups version: $(git rev-parse HEAD)"
+popd
+
 # prepare fuzz dir
 cp -r $SRC/fuzzing/projects/libcups/fuzzer $SRC/libcups/ossfuzz/
 
@@ -28,6 +33,10 @@ if [[ $SANITIZER != "coverage" ]]; then
     export LDFLAGS="-fsanitize=$SANITIZER"
 fi
 
+# show build version
+echo "libcups version: $(git rev-parse HEAD)"
+
+# build libcups
 ./configure
 make
 
