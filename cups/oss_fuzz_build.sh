@@ -9,6 +9,10 @@ if [[ $SANITIZER != "coverage" ]]; then
     export CFLAGS="$CFLAGS -fsanitize=$SANITIZER"
     export CXXFLAGS="$CXXFLAGS -fsanitize=$SANITIZER"
     export LDFLAGS="-fsanitize=$SANITIZER"
+elif [[ $SANITIZER == "undefined" ]]; then
+    export CFLAGS="$CFLAGS -fno-sanitize=function"
+    export CXXFLAGS="$CXXFLAGS -fno-sanitize=function"
+    export LDFLAGS="-fno-sanitize=function"
 fi
 
 ./configure --enable-static --disable-shared
