@@ -4,3 +4,7 @@ The code in this directory contain:
 
 1. Fuzzing harness for OSS-Fuzz
 2. Fuzzing seeds related to unit tests
+
+## Local Building
+
+Might require packet libssl-dev for local build
