@@ -15,16 +15,22 @@ elif [[ $SANITIZER == "undefined" ]]; then
     export LDFLAGS="-fno-sanitize=function"
 fi
 
-# Show build version
-echo "CUPS version: $(git rev-parse HEAD)"
-
-# Build CUPS
-./configure --enable-static --disable-shared
-make # -j$(nproc)
-
-pushd $SRC/fuzzing/cups/
+# Prepare fuzz dir
+pushd $SRC/fuzzing/projects/cups/
 # Show fuzzer version
 echo "OpenPrinting/fuzzing version: $(git rev-parse HEAD)"
+cp -r $SRC/fuzzing/projects/cups/fuzzer $SRC/cups/ossfuzz/
+popd
+
+# Build CUPS
+pushd $SRC/cups
+# Show build version
+echo "CUPS version: $(git rev-parse HEAD)"
+./configure --enable-static --disable-shared
+make # -j$(nproc)
+popd
+
+pushd $SRC/cups/ossfuzz/
 # Build fuzzers
 make
 cp fuzz_cups $OUT/fuzz_cups
@@ -33,8 +39,9 @@ cp fuzz_raster $OUT/fuzz_raster
 popd
 
 # Prepare corpus
-pushd $SRC/fuzzing/cups/
-zip -r $OUT/fuzz_cups_seed_corpus.zip fuzz_cups_seed_corpus/
-zip -r $OUT/fuzz_ipp_seed_corpus.zip fuzz_ipp_seed_corpus/
-zip -r $OUT/fuzz_raster_seed_corpus.zip fuzz_raster_seed_corpus/
+pushd $SRC/fuzzing/projects/cups/seeds/
+for seed_folder in *; do
+    zip -r $seed_folder.zip $seed_folder
+done
+cp *.zip $OUT
 popd
