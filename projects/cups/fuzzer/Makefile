@@ -1,8 +1,10 @@
-CUPS=fuzz_cups
-IPP=fuzz_ipp
-RES=fuzz_raster
+TARGETS = \
+	fuzz_cups \
+	fuzz_ipp \
+	fuzz_raster \
+	fuzz_array
 
-BUILDTOP=./../../cups
+BUILDTOP=./../
 
 INCLUDE=\
 	-I$(BUILDTOP)\
@@ -20,31 +22,25 @@ LIBRARY=\
 
 # Using static libraries is important for OSS-Fuzz infrastructure.
 # `LIB_FUZZING_ENGINE` can be used with the AFL driver.
+
 ALL_LDFLAGS=\
 	$(LIBRARY)\
 	-lcups -lcupsimage\
 	-l:libavahi-common.a -l:libavahi-client.a -l:libdbus-1.a\
 	-lssl -lcrypto -lz -lpthread -lcrypt -lsystemd\
+	# -fsanitize=address # only for debugging
 	$(LIB_FUZZING_ENGINE)
 
-all: $(CUPS) $(IPP) $(RES)
+.PHONY: all $(TARGETS)
+
+all: $(TARGETS)
 
 # Using `CXX` as linker
 # https://google.github.io/oss-fuzz/getting-started/new-project-guide/#Requirements
 
-$(CUPS):
-	$(CC) $(CFLAGS) $(ALL_CFLAGS) $(INCLUDE) -c $(CUPS).c
-	$(CXX) $(CFLAGS) -o $(CUPS) $(CUPS).o $(ALL_LDFLAGS)
-
-$(IPP):
-	$(CC) $(CFLAGS) $(ALL_CFLAGS) $(INCLUDE) -c $(IPP).c
-	$(CXX) $(CFLAGS) -o $(IPP) $(IPP).o $(ALL_LDFLAGS)
-
-$(RES):
-	$(CC) $(CFLAGS) $(ALL_CFLAGS) $(INCLUDE) -c $(RES).c
-	$(CXX) $(CFLAGS) -o $(RES) $(RES).o $(ALL_LDFLAGS)
+$(TARGETS):
+	$(CC) $(CFLAGS) $(ALL_CFLAGS) $(INCLUDE) -c $@.c
+	$(CXX) $(CFLAGS) -o $@ $@.o $(ALL_LDFLAGS)
 
 clean:
-	rm $(CUPS) $(IPP) $(RES) *.o
-
-.PHONY: CUPS IPP RES clean
+	rm $(TARGETS) *.o
