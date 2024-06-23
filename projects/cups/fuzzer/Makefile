@@ -42,5 +42,8 @@ $(TARGETS):
 	$(CC) $(CFLAGS) $(ALL_CFLAGS) $(INCLUDE) -c $@.c
 	$(CXX) $(CFLAGS) -o $@ $@.o $(ALL_LDFLAGS)
 
+oss_fuzzers:
+	cp $(TARGETS) $(OUT)
+
 clean:
 	rm $(TARGETS) *.o

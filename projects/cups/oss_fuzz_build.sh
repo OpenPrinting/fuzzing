@@ -33,9 +33,7 @@ popd
 pushd $SRC/cups/ossfuzz/
 # Build fuzzers
 make
-cp fuzz_cups $OUT/fuzz_cups
-cp fuzz_ipp $OUT/fuzz_ipp
-cp fuzz_raster $OUT/fuzz_raster
+make oss_fuzzers
 popd
 
 # Prepare corpus
