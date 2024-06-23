@@ -28,10 +28,10 @@ ALL_LDFLAGS=\
 	-lcups -lcupsimage\
 	-l:libavahi-common.a -l:libavahi-client.a -l:libdbus-1.a\
 	-lssl -lcrypto -lz -lpthread -lcrypt -lsystemd\
-	# -fsanitize=address # only for debugging
 	$(LIB_FUZZING_ENGINE)
+# -fsanitize=address # only for debugging
 
-.PHONY: all $(TARGETS)
+.PHONY: $(TARGETS)
 
 all: $(TARGETS)
 
