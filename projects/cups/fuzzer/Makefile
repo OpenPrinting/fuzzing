@@ -15,7 +15,7 @@ ALL_CFLAGS=\
 	-D_CUPS_SOURCE -D_FORTIFY_SOURCE=3 -D_REENTRANT  -D_LARGEFILE_SOURCE\
 	-D_LARGEFILE64_SOURCE -D_THREAD_SAFE -D_REENTRANT\
 	-Wall -Wunused -Wno-char-subscripts -Wno-deprecated-declarations\
-	-Wno-format-y2k -Wno-switch -Wno-unused-result
+	-Wno-format-y2k -Wno-switch -Wno-unused-result -g
 
 LIBRARY=\
 	-L$(BUILDTOP)/cups/

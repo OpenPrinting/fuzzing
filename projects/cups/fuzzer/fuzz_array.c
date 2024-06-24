@@ -47,12 +47,12 @@ int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
   }
 
   size_t halfSize = Size / 2;
-  void *firstStr = malloc(halfSize);
+  void *firstStr = malloc(halfSize + 1);
     if (!firstStr) {
         return 0;
     }
   memcpy(firstStr, Data, halfSize);
-  void *secondStr = malloc(Size - halfSize);
+  void *secondStr = malloc(Size - halfSize + 1);
   if (!secondStr) {
     free(firstStr);
     return 0;
