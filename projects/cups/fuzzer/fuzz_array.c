@@ -123,8 +123,9 @@ int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
   }
 
   // cupsArrayDup()
-  dup_array = cupsArrayDup(array);
-
+  if (array){
+    dup_array = cupsArrayDup(array);
+  }
   // cupsArrayRemove()
   if (!cupsArrayRemove(array, firstStr))
   {
