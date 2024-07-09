@@ -2,7 +2,16 @@
 
 ## Build
 
-1. Recompile source code with `-g -O0` parameter
+1. Recompile source code with `-g -O0 -fsanitize=address` parameter
+```bash
+vim configure
+export CC=clang
+export CXX=clang++
+export CFLAGS="-g -DFUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION -fsanitize=address,undefined -fsanitize=fuzzer-no-link"
+export CXXFLAGS="-g -DFUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION -fsanitize=address,undefined -fsanitize=fuzzer-no-link"
+export LDFLAGS="-g -fsanitize=address"
+./configure --enable-static --disable-shared
+```
 2. Replace `main` function for fuzz harness OR simply use `python infra/helper.py reprocude`
 
 ```C
