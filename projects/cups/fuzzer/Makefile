@@ -45,7 +45,8 @@ all: $(TARGETS)
 
 $(TARGETS):
 	$(CC) $(CFLAGS) $(ALL_CFLAGS) $(INCLUDE) -c $@.c
-	$(CXX) $(CFLAGS) -o $@ $@.o $(ALL_LDFLAGS)
+	$(CXX) $(CFLAGS) $(ALL_CFLAGS) $(INCLUDE) -c -o fuzz_helpers.o fuzz_helpers.cpp
+	$(CXX) $(CFLAGS) -o $@ $@.o fuzz_helpers.o $(ALL_LDFLAGS)
 
 oss_fuzzers:
 	cp $(TARGETS) $(OUT)
