@@ -4,6 +4,11 @@ TARGETS = \
 	fuzz_raster \
 	fuzz_array
 
+# For local build
+# export CC=clang
+# export CXX=clang++
+# LIB_FUZZING_ENGINE=/root/libFuzzer.a
+
 BUILDTOP=./../
 
 INCLUDE=\
