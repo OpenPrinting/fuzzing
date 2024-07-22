@@ -5,6 +5,7 @@ export CFLAGS="$CFLAGS -fPIE"
 export CXXFLAGS="$CFLAGS -fPIE"
 export LDFLAGS="$CFLAGS -fPIE"
 
+# For regular sanitizers
 if [[ $SANITIZER != "coverage" ]]; then
     export CFLAGS="$CFLAGS -fsanitize=$SANITIZER"
     export CXXFLAGS="$CXXFLAGS -fsanitize=$SANITIZER"
@@ -13,6 +14,13 @@ elif [[ $SANITIZER == "undefined" ]]; then
     export CFLAGS="$CFLAGS -fno-sanitize=function"
     export CXXFLAGS="$CXXFLAGS -fno-sanitize=function"
     export LDFLAGS="-fno-sanitize=function"
+fi
+
+# For fuzz introspector
+if [[ $SANITIZER == "introspector" ]]; then
+    export CFLAGS="-O0 -fno-omit-frame-pointer -gline-tables-only -Wno-error=enum-constexpr-conversion -Wno-error=incompatible-function-pointer-types -Wno-error=int-conversion -Wno-error=deprecated-declarations -Wno-error=implicit-function-declaration -Wno-error=implicit-int -DFUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION -O0 -flto -fno-inline-functions -fuse-ld=gold -Wno-unused-command-line-argument -fsanitize=fuzzer-no-link -g"
+    export CXXFLAGS="-O0 -fno-omit-frame-pointer -gline-tables-only -Wno-error=enum-constexpr-conversion -Wno-error=incompatible-function-pointer-types -Wno-error=int-conversion -Wno-error=deprecated-declarations -Wno-error=implicit-function-declaration -Wno-error=implicit-int -DFUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION -O0 -flto -fno-inline-functions -fuse-ld=gold -Wno-unused-command-line-argument -fsanitize=fuzzer-no-link -stdlib=libc++ -g"
+    export LDFLAGS=""
 fi
 
 # Prepare fuzz dir

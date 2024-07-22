@@ -27,10 +27,18 @@ cp -r $SRC/fuzzing/projects/libcups/fuzzer $SRC/libcups/ossfuzz/
 cd $SRC/libcups
 git submodule update --init --recursive
 
+# For regular sanitizers
 if [[ $SANITIZER != "coverage" ]]; then
     export CFLAGS="$CFLAGS -fsanitize=$SANITIZER"
     export CXXFLAGS="$CXXFLAGS -fsanitize=$SANITIZER"
     export LDFLAGS="-fsanitize=$SANITIZER"
+fi
+
+# For fuzz introspector
+if [[ $SANITIZER == "introspector" ]]; then
+    export CFLAGS="-O0 -fno-omit-frame-pointer -gline-tables-only -Wno-error=enum-constexpr-conversion -Wno-error=incompatible-function-pointer-types -Wno-error=int-conversion -Wno-error=deprecated-declarations -Wno-error=implicit-function-declaration -Wno-error=implicit-int -DFUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION -O0 -flto -fno-inline-functions -fuse-ld=gold -Wno-unused-command-line-argument -fsanitize=fuzzer-no-link -g"
+    export CXXFLAGS="-O0 -fno-omit-frame-pointer -gline-tables-only -Wno-error=enum-constexpr-conversion -Wno-error=incompatible-function-pointer-types -Wno-error=int-conversion -Wno-error=deprecated-declarations -Wno-error=implicit-function-declaration -Wno-error=implicit-int -DFUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION -O0 -flto -fno-inline-functions -fuse-ld=gold -Wno-unused-command-line-argument -fsanitize=fuzzer-no-link -stdlib=libc++ -g"
+    export LDFLAGS=""
 fi
 
 # show build version
