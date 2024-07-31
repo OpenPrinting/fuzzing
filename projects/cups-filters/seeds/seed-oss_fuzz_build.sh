@@ -24,28 +24,29 @@ if [[ $SANITIZER == "introspector" ]]; then
 fi
 
 # Prepare fuzz dir
-pushd $SRC/fuzzing/projects/cups/
+pushd $SRC/fuzzing/projects/cups-filters/
 # Show fuzzer version
 echo "OpenPrinting/fuzzing version: $(git rev-parse HEAD)"
-cp -r $SRC/fuzzing/projects/cups/fuzzer $SRC/cups/ossfuzz/
+cp -r $SRC/fuzzing/projects/cups-filters/fuzzer $SRC/cups/ossfuzz/
 popd
 
-# Build CUPS
-pushd $SRC/cups
+# Build cups-filters
+pushd $SRC/cups-filters
 # Show build version
-echo "CUPS version: $(git rev-parse HEAD)"
+echo "cups-filters version: $(git rev-parse HEAD)"
+./autogen.sh
 ./configure --enable-static --disable-shared
 make # -j$(nproc)
 popd
 
-pushd $SRC/cups/ossfuzz/
+pushd $SRC/cups-filters/ossfuzz/
 # Build fuzzers
 make
 make oss_fuzzers
 popd
 
 # Prepare corpus
-pushd $SRC/fuzzing/projects/cups/seeds/
+pushd $SRC/fuzzing/projects/cups-filters/seeds/
 for seed_folder in *; do
     zip -r $seed_folder.zip $seed_folder
 done
