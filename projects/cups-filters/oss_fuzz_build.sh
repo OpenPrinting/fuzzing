@@ -33,12 +33,12 @@ popd
 # Build cups-filters
 pushd $SRC/cups-filters
 
-# Show build version        
+# Show build version
 echo "cups-filters version: $(git rev-parse HEAD)"
 
-# For libppd-dev
-export LIBPPD_CFLAGS="-I/usr/include"
-export LIBPPD_LIBS="-L/usr/lib -lppd"
+# For libppd-dev in cups-filters-2.x
+# export LIBPPD_CFLAGS="-I/usr/include"
+# export LIBPPD_LIBS="-L/usr/lib -lppd"
 
 ./autogen.sh
 ./configure --enable-static --disable-shared
