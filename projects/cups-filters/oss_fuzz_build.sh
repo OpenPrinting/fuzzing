@@ -1,9 +1,13 @@
 #!/bin/bash -eu
 
 # Set fPIE
-export CFLAGS="$CFLAGS -fPIE"
-export CXXFLAGS="$CFLAGS -fPIE"
-export LDFLAGS="$CFLAGS -fPIE"
+# export CFLAGS="$CFLAGS -fPIE"
+# export CXXFLAGS="$CFLAGS -fPIE"
+# export LDFLAGS="$CFLAGS -fPIE"
+
+export CFLAGS="-fPIE"
+export CXXFLAGS="-fPIE"
+export LDFLAGS="-fPIE"
 
 # For regular sanitizers
 if [[ $SANITIZER != "coverage" ]]; then
@@ -18,8 +22,8 @@ fi
 
 # For fuzz introspector
 if [[ $SANITIZER == "introspector" ]]; then
-    export CFLAGS="-O0 -fno-omit-frame-pointer -gline-tables-only -Wno-error=enum-constexpr-conversion -Wno-error=incompatible-function-pointer-types -Wno-error=int-conversion -Wno-error=deprecated-declarations -Wno-error=implicit-function-declaration -Wno-error=implicit-int -DFUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION -g"
-    export CXXFLAGS="-O0 -fno-omit-frame-pointer -gline-tables-only -Wno-error=enum-constexpr-conversion -Wno-error=incompatible-function-pointer-types -Wno-error=int-conversion -Wno-error=deprecated-declarations -Wno-error=implicit-function-declaration -Wno-error=implicit-int -DFUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION -g"
+    export CFLAGS="-O0 -flto -fno-omit-frame-pointer -gline-tables-only -Wno-error=enum-constexpr-conversion -Wno-error=incompatible-function-pointer-types -Wno-error=int-conversion -Wno-error=deprecated-declarations -Wno-error=implicit-function-declaration -Wno-error=implicit-int -DFUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION -g"
+    export CXXFLAGS="-O0 -flto -fno-omit-frame-pointer -gline-tables-only -Wno-error=enum-constexpr-conversion -Wno-error=incompatible-function-pointer-types -Wno-error=int-conversion -Wno-error=deprecated-declarations -Wno-error=implicit-function-declaration -Wno-error=implicit-int -DFUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION -g"
     export LDFLAGS=""
 fi
 
