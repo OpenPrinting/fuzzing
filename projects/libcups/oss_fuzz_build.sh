@@ -45,7 +45,7 @@ fi
 echo "libcups version: $(git rev-parse HEAD)"
 
 # build libcups
-./configure
+./configure --enable-static --disable-shared
 make
 
 # build fuzzers
