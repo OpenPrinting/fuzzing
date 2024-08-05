@@ -52,7 +52,7 @@ popd
 pushd $SRC/cups-filters/ossfuzz/
 # Build fuzzers
 make
-make oss_fuzzers
+make oss_fuzzer
 popd
 
 # Prepare corpus
