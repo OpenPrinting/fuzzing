@@ -44,6 +44,9 @@ echo "cups-filters version: $(git rev-parse HEAD)"
 # export LIBPPD_CFLAGS="-I/usr/include"
 # export LIBPPD_LIBS="-L/usr/lib -lppd"
 
+# For multiple definition of `_cups_isalpha', `_cups_islower`, `_cups_toupper`
+export LDFLAGS="$LDFLAGS -Wl,--allow-multiple-definition"
+
 ./autogen.sh
 ./configure --enable-static --disable-shared
 make # -j$(nproc)
