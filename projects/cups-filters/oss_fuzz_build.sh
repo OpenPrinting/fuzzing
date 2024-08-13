@@ -9,6 +9,10 @@ export CFLAGS="-fPIE"
 export CXXFLAGS="-fPIE"
 export LDFLAGS="-fPIE"
 
+export CFLAGS="$CFLAGS -fsanitize=$SANITIZER"
+export CXXFLAGS="$CXXFLAGS -fsanitize=$SANITIZER"
+export LDFLAGS="-fsanitize=$SANITIZER"
+
 # For regular sanitizers
 if [[ $SANITIZER != "coverage" ]]; then
     export CFLAGS="$CFLAGS -fsanitize=$SANITIZER"
