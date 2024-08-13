@@ -2,8 +2,13 @@ TARGETS = \
 	fuzz_texttopdf \
 	# fuzz_texttopdf_2
 
-CC=clang
-CXX=clang++
+export CC=clang
+export CXX=clang++
+
+ifeq ($(FUZZING_ENGINE), afl)
+    export CC=afl-clang-fast
+    export CXX=afl-clang-fast++
+endif
 
 INCDIR=-I./../ -I./../filter/
 LIBDIR=-L./../filter/
