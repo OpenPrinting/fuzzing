@@ -10,11 +10,6 @@ ifeq ($(FUZZING_ENGINE), afl)
     export CXX=afl-clang-fast++
 endif
 
-ifeq ($(FUZZING_ENGINE), honggfuzz)
-    export CC=hfuzz-clang
-    export CXX=hfuzz-clang++
-endif 
-
 INCDIR=-I./../ -I./../filter/
 LIBDIR=-L./../filter/
 BUILD_FLAGS=-g -O0
