@@ -14,10 +14,10 @@ export CXXFLAGS="$CXXFLAGS -fsanitize=$SANITIZER"
 export LDFLAGS="-fsanitize=$SANITIZER"
 
 # For regular sanitizers
-if [[ $SANITIZER != "coverage" ]]; then
-    export CFLAGS="$CFLAGS -fsanitize=$SANITIZER"
-    export CXXFLAGS="$CXXFLAGS -fsanitize=$SANITIZER"
-    export LDFLAGS="-fsanitize=$SANITIZER"
+if [[ $SANITIZER == "coverage" ]]; then
+    export CFLAGS=""
+    export CXXFLAGS=""
+    export LDFLAGS=""
 elif [[ $SANITIZER == "undefined" ]]; then
     export CFLAGS="$CFLAGS -fno-sanitize=function"
     export CXXFLAGS="$CXXFLAGS -fno-sanitize=function"
