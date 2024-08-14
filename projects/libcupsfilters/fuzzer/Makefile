@@ -1,0 +1,27 @@
+TARGETS = \
+	fuzz_dither
+
+export CC=clang
+export CXX=clang++
+
+ifeq ($(FUZZING_ENGINE), afl)
+    export CC=afl-clang-fast
+    export CXX=afl-clang-fast++
+endif
+
+INCDIR=-I./../ -I./../cupsfilters/
+LIBDIR=-L./../cupsfilters/ -L./../ -L./../.libs
+BUILD_FLAGS=-g -O0
+LINK_FLAGS=-g -O0 -l:libcupsfilters.a -l:libcups.a -l:libgnutls.a -l:libtasn1.a -l:libhogweed.a -l:libgmp.a -l:libnettle.a -l:libidn2.a -l:libunistring.a -l:libavahi-client.a -l:libavahi-common.a -l:libdbus-1.a -l:libcap.a -lz -l:libglib-2.0.a -l:libqpdf.a -l:libjpeg.a -l:libp11-kit.so -l:libgssapi_krb5.so.2 -lsystemd -lpthread -llcms2 -lpoppler-cpp
+
+All: $(TARGETS)
+
+fuzz_dither:
+	$(CC) $(CFLAGS) $(INCDIR) $(BUILD_FLAGS) -c -o fuzz_dither.o fuzz_dither.c
+	$(CXX) $(CFLAGS) $(LIBDIR) $(LIB_FUZZING_ENGINE) -o fuzz_dither fuzz_dither.o $(LINK_FLAGS)
+
+oss_fuzzers:
+	cp $(TARGETS) $(OUT)
+
+clean:
+	rm -f $(TARGETS) *.o $(TARGETS)
