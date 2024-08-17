@@ -22,6 +22,8 @@ fuzz_dither:
 
 oss_fuzzers:
 	cp $(TARGETS) $(OUT)
+# for loading missing shared libs
+	chrpath -r '$(ORIGIN)/lib' $(OUT)/$(TARGETS)
 
 clean:
 	rm -f $(TARGETS) *.o $(TARGETS)
