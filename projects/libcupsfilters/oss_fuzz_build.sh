@@ -60,6 +60,8 @@ pushd $SRC/libcupsfilters/ossfuzz/
 # Build fuzzers
 make
 make oss_fuzzers
+# shared build settings
+chrpath -r '$ORIGIN/lib' $OUT/fuzz_dither
 popd
 
 # Prepare corpus

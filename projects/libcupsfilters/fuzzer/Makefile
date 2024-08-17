@@ -9,6 +9,10 @@ ifeq ($(FUZZING_ENGINE), afl)
     export CXX=afl-clang-fast++
 endif
 
+mkdir -p '$(OUT)/lib/'
+cp /usr/lib/x86_64-linux-gnu/liblcms2.so.2 '$(OUT)/lib/'
+cp /usr/lib/x86_64-linux-gnu/libpoppler.so.134 '$(OUT)/lib/'
+
 INCDIR=-I./../ -I./../cupsfilters/
 LIBDIR=-L./../cupsfilters/ -L./../ -L./../.libs
 BUILD_FLAGS=-g -O0
@@ -26,7 +30,7 @@ oss_fuzzers:
 	mkdir -p '$(OUT)/lib/'
 	cp /usr/lib/x86_64-linux-gnu/liblcms2.so.2 '$(OUT)/lib/'
 	cp /usr/lib/x86_64-linux-gnu/libpoppler.so.134 '$(OUT)/lib/'
-	chrpath -r '$(ORIGIN)/lib' $(OUT)/$(TARGETS)
+# chrpath -r '$$ORIGIN/lib' $$OUT/$$TARGETS # move to oss_fuzz_build.sh
 
 clean:
 	rm -f $(TARGETS) *.o $(TARGETS)
