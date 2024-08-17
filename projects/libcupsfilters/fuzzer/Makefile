@@ -24,8 +24,8 @@ oss_fuzzers:
 	cp $(TARGETS) $(OUT)
 # for loading missing shared libs
 	mkdir -p '$(OUT)/lib/'
-	cp /usr/lib/x86_64-linux-gnu/liblcms2.so '$(OUT)/lib/'
-	cp /usr/lib/x86_64-linux-gnu/libpoppler-cpp.so '$(OUT)/lib/'
+	cp /usr/lib/x86_64-linux-gnu/liblcms2.so.2 '$(OUT)/lib/'
+	cp /usr/lib/x86_64-linux-gnu/libpoppler.so.134 '$(OUT)/lib/'
 	chrpath -r '$(ORIGIN)/lib' $(OUT)/$(TARGETS)
 
 clean:
