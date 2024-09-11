@@ -5,10 +5,15 @@ TARGETS = \
 export CC=clang
 export CXX=clang++
 
-# ifeq ($(FUZZING_ENGINE), afl)
-#     export CC=afl-clang-fast
-#     export CXX=afl-clang-fast++
-# endif
+ifeq ($(FUZZING_ENGINE), afl)
+    export CC=afl-clang-fast
+    export CXX=afl-clang-fast++
+endif
+
+ifeq ($(SANITIZER), introspector)
+	export CC=clang
+	export CXX=clang++
+endif
 
 INCDIR=-I./../ -I./../filter/
 LIBDIR=-L./../filter/
