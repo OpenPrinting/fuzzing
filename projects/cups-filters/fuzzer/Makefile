@@ -6,8 +6,8 @@ export CC=clang
 export CXX=clang++
 
 ifeq ($(FUZZING_ENGINE), afl)
-    export CC=afl-clang-fast
-    export CXX=afl-clang-fast++
+    export CC=afl-clang
+    export CXX=afl-clang++
 endif
 
 ifeq ($(SANITIZER), introspector)
