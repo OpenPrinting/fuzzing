@@ -67,7 +67,7 @@ make
 make oss_fuzzers
 
 # for fuzz_texttopdf
-chrpath -r '$ORIGIN/lib' $OUT/fuzz_texttopdf
+patchelf --set-rpath '$ORIGIN/lib' $OUT/fuzz_texttopdf
 
 popd
 
