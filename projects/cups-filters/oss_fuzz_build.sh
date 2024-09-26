@@ -1,5 +1,10 @@
 #!/bin/bash -eu
 
+# Prepare shared libraries
+mkdir -p $OUT/lib
+cp /usr/lib/x86_64-linux-gnu/liblcms2.so* $OUT/lib/
+cp /usr/lib/x86_64-linux-gnu/libpoppler* $OUT/lib/
+
 # Set fPIE
 # export CFLAGS="$CFLAGS -fPIE"
 # export CXXFLAGS="$CFLAGS -fPIE"
@@ -60,6 +65,10 @@ pushd $SRC/cups-filters/ossfuzz/
 # Build fuzzers
 make
 make oss_fuzzers
+
+# for fuzz_texttopdf
+chrpath -r '$ORIGIN/lib' $OUT/fuzz_texttopdf
+
 popd
 
 # Prepare corpus
