@@ -11,7 +11,6 @@ popd
 # Prepare shared libraries
 mkdir -p $OUT/lib
 cp /usr/lib/x86_64-linux-gnu/liblcms2.so* $OUT/lib/
-cp /usr/lib/x86_64-linux-gnu/libpoppler* $OUT/lib/
 
 # Set fPIE
 # export CFLAGS="$CFLAGS -fPIE"
@@ -71,11 +70,14 @@ popd
 
 pushd $SRC/cups-filters/ossfuzz/
 # Build fuzzers
-make
-make oss_fuzzers
+# make
+# make oss_fuzzers
+
+# Temporarily do nothing
+echo "Do nothing"
 
 # for fuzz_texttopdf
-patchelf --set-rpath '$ORIGIN/lib' $OUT/fuzz_texttopdf
+# patchelf --set-rpath '$ORIGIN/lib' $OUT/fuzz_texttopdf
 
 popd
 
