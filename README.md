@@ -12,6 +12,11 @@ Existing integrated OpenPrinting projects include:
 + [cups-filters](https://github.com/OpenPrinting/cups-filters)
 + [libcupsfilters](https://github.com/OpenPrinting/libcupsfilters)
 
+## Debugging Guidance
+
++ [Build](docs/build.md)
++ [Bug Triage](docs/triage.md)
+
 ## Bug Reporting
 For any security-related findings using this repo, **DO NOT** post the details directly in the public issue tracker of OpenPrining projects. Please consider reporting security vulnerabilities with the following options:
 

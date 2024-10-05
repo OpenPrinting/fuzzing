@@ -1,6 +1,11 @@
 # Triage Reported Issues
 
-## Build
+## Local Traige
+
+0. Local docker (Better use Ubuntu:20.04 for fitting OSS-Fuzz, Must use privileged docker.)
+```bash
+docker run --privileged -it --name $PROJECT -v $PROJECT:/src ubuntu:20.04 "/bin/bash"
+```
 
 1. Recompile source code with `-g -O0 -fsanitize=address` parameter
 ```bash
@@ -54,6 +59,8 @@ int main(int argc, char *argv[]) {
 
 3. Minimize PoC file
 
-## Use GDB for Debugging
+## Debugging with GDB
 
-To be updated
+```bash
+python infra/helper.py shell base-runner-debug
+```
