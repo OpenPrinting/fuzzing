@@ -64,3 +64,6 @@ int main(int argc, char *argv[]) {
 ```bash
 python infra/helper.py shell base-runner-debug
 ```
+
+## build with O0
+sed -i 's/-O[0-9s]/-O0/g' configure
