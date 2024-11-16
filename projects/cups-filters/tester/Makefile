@@ -9,7 +9,7 @@ INCDIR=-I./../filter -I./../fontembed -I./../
 LIBDIR=-L./../filter -L./../fontembed
 
 BUILD_FLAGS=-g -O0 
-# LINK_FLAGS=-l:libfontembed.la
+LINK_FLAGS=-Wl,--allow-multiple-definition
 LDADD = ../libfontembed.la
 LIB_FUZZING_ENGINE = -fsanitize=fuzzer,address
 
