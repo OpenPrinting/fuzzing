@@ -1,21 +1,12 @@
 #!/bin/bash -eu
 
-# Build poppler static library for fuzz_texttopdf
-git clone https://gitlab.freedesktop.org/poppler/poppler.git && cd poppler
-mkdir build && pushd build
-cmake .. -DBUILD_SHARED_LIBS=OFF -DENABLE_CPP=ON -DENABLE_GPGME=OFF -DENABLE_QT6=OFF -DENABLE_BOOST=OFF -DENABLE_LIBCURL=OFF -DENABLE_NSS3=OFF -DENABLE_QT5=OFF -DENABLE_LIBOPENJPEG=unmaintained
-make
-cp libpoppler.a cpp/libpoppler-cpp.a /usr/lib/x86_64-linux-gnu/
-popd
-
-# Prepare shared libraries
-mkdir -p $OUT/lib
-cp /usr/lib/x86_64-linux-gnu/liblcms2.so* $OUT/lib/
-
 # Set fPIE
 # export CFLAGS="$CFLAGS -fPIE"
 # export CXXFLAGS="$CFLAGS -fPIE"
 # export LDFLAGS="$CFLAGS -fPIE"
+
+export CC=clang
+export CXX=clang++
 
 export CFLAGS="-fPIE"
 export CXXFLAGS="-fPIE"
@@ -43,6 +34,9 @@ if [[ $SANITIZER == "introspector" ]]; then
     export LDFLAGS="-flto"
 fi
 
+# for libtool usage
+export PATH=$PATH:$SRC/cups-filters
+
 # Prepare fuzz dir
 pushd $SRC/fuzzing/projects/cups-filters/
 # Show fuzzer version
@@ -56,12 +50,13 @@ pushd $SRC/cups-filters
 # Show build version
 echo "cups-filters version: $(git rev-parse HEAD)"
 
-# For libppd-dev in cups-filters-2.x
-# export LIBPPD_CFLAGS="-I/usr/include"
-# export LIBPPD_LIBS="-L/usr/lib -lppd"
-
 # For multiple definition of `_cups_isalpha', `_cups_islower`, `_cups_toupper`
 export LDFLAGS="$LDFLAGS -Wl,--allow-multiple-definition" # rather important without this, the build will fail
+
+### Temperal fix bug due to libqpdf-dev 9
+pushd $SRC/cups-filters/filter/pdftopdf/
+patch < patch_qpdf_xobject
+popd
 
 ./autogen.sh
 ./configure --enable-static --disable-shared
@@ -70,15 +65,8 @@ popd
 
 pushd $SRC/cups-filters/ossfuzz/
 # Build fuzzers
-# make
-# make oss_fuzzers
-
-# Temporarily do nothing
-echo "Do nothing"
-
-# for fuzz_texttopdf
-# patchelf --set-rpath '$ORIGIN/lib' $OUT/fuzz_texttopdf
-
+make
+make ossfuzz
 popd
 
 # Prepare corpus
@@ -88,10 +76,3 @@ for seed_folder in *; do
 done
 cp *.zip $OUT
 popd
-
-# For build poppler static library
-# git clone https://gitlab.freedesktop.org/poppler/poppler.git
-# mkdir build
-# cd build
-# cmake .. -DBUILD_SHARED_LIBS=OFF -DENABLE_CPP=ON -DENABLE_GPGME=OFF -DENABLE_QT6=OFF -DENABLE_BOOST=OFF -DENABLE_LIBCURL=OFF -DENABLE_NSS3=OFF -DENABLE_QT5=OFF -DENABLE_LIBOPENJPEG=unmaintained
-# make
