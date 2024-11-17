@@ -36,7 +36,7 @@ fi
 
 # for libtool usage
 export PATH=$PATH:$SRC/cups-filters
-cp $SRC/fuzzing/projects/cups-filters/
+cp $SRC/fuzzing/projects/cups-filters/fuzzer/patch_qpdf_xobject $SRC/cups-filters/filter/pdftopdf/
 
 # Prepare fuzz dir
 pushd $SRC/fuzzing/projects/cups-filters/
