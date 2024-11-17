@@ -36,6 +36,7 @@ fi
 
 # for libtool usage
 export PATH=$PATH:$SRC/cups-filters
+cp $SRC/fuzzing/projects/cups-filters/
 
 # Prepare fuzz dir
 pushd $SRC/fuzzing/projects/cups-filters/
