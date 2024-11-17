@@ -4,6 +4,11 @@ TARGETS = \
 CC=clang
 CXX=clang++
 
+ifeq ($(FUZZING_ENGINE), afl)
+    export CC=afl-clang-fast
+    export CXX=afl-clang-fast++
+endif
+
 INCDIR=-I./../filter -I./../fontembed -I./../
 LIBDIR=-L./../filter -L./../fontembed -L./../ -L./../.libs
 
