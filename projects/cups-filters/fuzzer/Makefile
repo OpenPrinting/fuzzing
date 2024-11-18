@@ -5,8 +5,10 @@ CC=clang
 CXX=clang++
 
 ifeq ($(FUZZING_ENGINE), afl)
-    export CC=afl-clang-fast
-    export CXX=afl-clang-fast++
+    ifneq ($(SANITIZER), memory)
+        export CC=afl-clang-fast
+        export CXX=afl-clang-fast++
+    endif
 endif
 
 INCDIR=-I./../filter -I./../fontembed -I./../
