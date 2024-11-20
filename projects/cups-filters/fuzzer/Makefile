@@ -1,15 +1,15 @@
 TARGETS = \
 	fuzzpdf \
 
-CC=clang
-CXX=clang++
+# CC=clang
+# CXX=clang++
 
-ifeq ($(FUZZING_ENGINE), afl)
-    ifneq ($(SANITIZER), memory)
-        export CC=afl-clang-fast
-        export CXX=afl-clang-fast++
-    endif
-endif
+# ifeq ($(FUZZING_ENGINE), afl)
+#     ifneq ($(SANITIZER), memory)
+#         export CC=afl-clang-fast
+#         export CXX=afl-clang-fast++
+#     endif
+# endif
 
 INCDIR=-I./../filter -I./../fontembed -I./../
 LIBDIR=-L./../filter -L./../fontembed -L./../ -L./../.libs
