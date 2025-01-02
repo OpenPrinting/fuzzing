@@ -1,5 +1,5 @@
 TARGETS = \
-	fuzzpdf \
+	fu z z \
 
 # CC=clang
 # CXX=clang++
@@ -26,9 +26,9 @@ clean:
 pdfutils.o:
 	$(CC) $(CFLAGS) $(INCDIR) -c -o pdfutils.o ../filter/pdfutils.c
 
-fuzzpdf: pdfutils.o
-	$(CC) $(CFLAGS) $(INCDIR) $(BUILD_FLAGS) -c -o fuzzpdf.o fuzzpdf.c
-	$(CXX) $(CFLAGS) $(LIBDIR) $(LIB_FUZZING_ENGINE) -o fuzzpdf fuzzpdf.o pdfutils.o $(LINK_FLAGS)
+fuzz_pdf: pdfutils.o
+	$(CC) $(CFLAGS) $(INCDIR) $(BUILD_FLAGS) -c -o fuzz_pdf.o fuzz_pdf.c
+	$(CXX) $(CFLAGS) $(LIBDIR) $(LIB_FUZZING_ENGINE) -o fuzz_pdf fuzz_pdf.o pdfutils.o $(LINK_FLAGS)
 
 ossfuzz:
 	cp $(TARGETS) $(OUT)
