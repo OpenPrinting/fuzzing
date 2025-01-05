@@ -1,5 +1,5 @@
 TARGETS = \
-	fu z z \
+	fuzz_pdf \
 
 # CC=clang
 # CXX=clang++
