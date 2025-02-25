@@ -25,6 +25,7 @@ popd
 mkdir -p fuzzing/cups/fuzz_cups_seed/
 mkdir -p fuzzing/cups/fuzz_ipp_seed/
 mkdir -p fuzzing/cups/fuzz_raster_seed/
+mkdir -p fuzzing/cups/fuzz_ppd_seed/
 
 echo ""
 echo "Run: ./fuzzing/\${fuzzer} fuzzing/\${fuzzer}_seed fuzzing/\${fuzzer}_seed_corpus"
