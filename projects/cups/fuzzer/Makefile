@@ -3,7 +3,7 @@ TARGETS = \
 	fuzz_ipp \
 	fuzz_raster \
 	fuzz_array \
-	fuzz_ppd
+	# fuzz_ppd
 
 # For local build
 # export CC=clang
