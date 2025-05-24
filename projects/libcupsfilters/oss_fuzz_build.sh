@@ -35,7 +35,7 @@ fi
 pushd $SRC/fuzzing/projects/libcupsfilters/
 # Show fuzzer version
 echo "OpenPrinting/fuzzing version: $(git rev-parse HEAD)"
-cp -r $SRC/fuzzing/projects/libcupsfilters/fuzzer $SRC/libcupsfilters/ossfuzz/
+cp -r $SRC/fuzzing/projects/libcupsfilters/fuzzer/. $SRC/libcupsfilters/ossfuzz/
 popd
 
 # Build libcupsfilters

@@ -21,7 +21,7 @@ echo "libcups version: $(git rev-parse HEAD)"
 popd
 
 # prepare fuzz dir
-cp -r $SRC/fuzzing/projects/libcups/fuzzer $SRC/libcups/ossfuzz/
+cp -r $SRC/fuzzing/projects/libcups/fuzzer/. $SRC/libcups/ossfuzz/
 
 # build project
 cd $SRC/libcups
