@@ -42,7 +42,7 @@ cp $SRC/fuzzing/projects/cups-filters/fuzzer/patch_qpdf_xobject $SRC/cups-filter
 pushd $SRC/fuzzing/projects/cups-filters/
 # Show fuzzer version
 echo "OpenPrinting/fuzzing version: $(git rev-parse HEAD)"
-cp -r $SRC/fuzzing/projects/cups-filters/fuzzer $SRC/cups-filters/ossfuzz/
+cp -r $SRC/fuzzing/projects/cups-filters/fuzzer/. $SRC/cups-filters/ossfuzz/
 popd
 
 # Build cups-filters
