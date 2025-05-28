@@ -3,6 +3,7 @@
 mkdir -p $SRC/goipp/fuzzer
 cp $SRC/fuzzing/projects/goipp/fuzzer/fuzz_decode_bytes.go $SRC/goipp/fuzzer/
 cp $SRC/fuzzing/projects/goipp/fuzzer/fuzz_decode_bytes_ex.go $SRC/goipp/fuzzer/
+cp $SRC/fuzzing/projects/goipp/fuzzer/fuzz_round_trip.go $SRC/goipp/fuzzer/
 
 # seed corpus for FuzzDecodeBytes
 mkdir -p $WORK/fuzz_decode_bytes_corpus
@@ -15,6 +16,11 @@ mkdir -p $WORK/fuzz_decode_bytes_ex_corpus
 cp $SRC/fuzzing/projects/goipp/seeds/fuzz_decode_bytes_ex_seed_corpus/* $WORK/fuzz_decode_bytes_ex_corpus/
 zip -r $OUT/fuzz_decode_bytes_ex_seed_corpus.zip fuzz_decode_bytes_ex_corpus/
 
+# seed corpus for FuzzRoundTrip
+mkdir -p $WORK/fuzz_round_trip_corpus
+cp $SRC/fuzzing/projects/goipp/seeds/fuzz_round_trip_seed_corpus/* $WORK/fuzz_round_trip_corpus/
+zip -r $OUT/fuzz_round_trip_seed_corpus.zip fuzz_round_trip_corpus/
+
 
 # build dependencies and fiuzzers
 cd $SRC/goipp
@@ -24,3 +30,4 @@ go get github.com/AdamKorcz/go-118-fuzz-build/testing
 
 compile_native_go_fuzzer github.com/OpenPrinting/goipp/fuzzer FuzzDecodeBytes fuzz_decode_bytes
 compile_native_go_fuzzer github.com/OpenPrinting/goipp/fuzzer FuzzDecodeBytesEx fuzz_decode_bytes_ex
+compile_native_go_fuzzer github.com/OpenPrinting/goipp/fuzzer FuzzRoundTrip fuzz_round_trip
