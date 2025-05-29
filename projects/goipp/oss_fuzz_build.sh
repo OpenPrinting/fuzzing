@@ -12,14 +12,15 @@ cp $SRC/fuzzing/projects/goipp/seeds/good_and_bad_ipp_messages_seed_corpus/* $WO
 cd $WORK
 zip -r $OUT/fuzz_decode_bytes_seed_corpus.zip good_and_bad_ipp_messages_seed_corpus/
 zip -r $OUT/fuzz_decode_bytes_ex_seed_corpus.zip good_and_bad_ipp_messages_seed_corpus/
+zip -r $OUT/fuzz_collections_seed_corpus.zip good_and_bad_ipp_messages_seed_corpus/
+
 
 # Corpus for fuzzers that expect only valid (good) IPP messages
 mkdir -p $WORK/good_ipp_messages_seed_corpus
 cp $SRC/fuzzing/projects/goipp/seeds/good_ipp_messages_seed_corpus/* $WORK/good_ipp_messages_seed_corpus/
 zip -r $OUT/fuzz_round_trip_seed_corpus.zip good_ipp_messages_seed_corpus/
-zip -r $OUT/fuzz_collections_seed_corpus.zip good_ipp_messages_seed_corpus/
 
-# Build goipp fuzzers
+# build dependencies and fiuzzers
 cd $SRC/goipp
 go mod tidy
 go install github.com/AdamKorcz/go-118-fuzz-build@latest
