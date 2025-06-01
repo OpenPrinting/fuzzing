@@ -6,6 +6,7 @@ cp $SRC/fuzzing/projects/goipp/fuzzer/fuzz_decode_bytes_ex.go $SRC/goipp/fuzzer/
 cp $SRC/fuzzing/projects/goipp/fuzzer/fuzz_round_trip.go $SRC/goipp/fuzzer/
 cp $SRC/fuzzing/projects/goipp/fuzzer/fuzz_collections.go $SRC/goipp/fuzzer/
 cp $SRC/fuzzing/projects/goipp/fuzzer/fuzz_tag_extension.go $SRC/goipp/fuzzer/
+cp $SRC/fuzzing/projects/goipp/fuzzer/fuzz_attribute_unpacking.go $SRC/goipp/fuzzer/  # new fuzz target
 
 # Corpus for fuzzers that accept good AND bad messages
 mkdir -p $WORK/good_and_bad_ipp_messages_seed_corpus
@@ -25,6 +26,11 @@ mkdir -p $WORK/extension_tags_seed_corpus
 cp $SRC/fuzzing/projects/goipp/seeds/extension_tags_seed_corpus/* $WORK/extension_tags_seed_corpus/
 zip -r $OUT/fuzz_tag_extension_seed_corpus.zip extension_tags_seed_corpus/
 
+# Corpus for attribute unpacking seeds
+mkdir -p $WORK/attr_unpack_seed_corpus
+cp $SRC/fuzzing/projects/goipp/seeds/attr_unpack_seed_corpus/* $WORK/attr_unpack_seed_corpus/
+zip -r $OUT/fuzz_attribute_unpacking_seed_corpus.zip attr_unpack_seed_corpus/
+
 # build dependencies and fuzzers
 cd $SRC/goipp
 go mod tidy
@@ -36,3 +42,4 @@ compile_native_go_fuzzer github.com/OpenPrinting/goipp/fuzzer FuzzDecodeBytesEx 
 compile_native_go_fuzzer github.com/OpenPrinting/goipp/fuzzer FuzzRoundTrip fuzz_round_trip
 compile_native_go_fuzzer github.com/OpenPrinting/goipp/fuzzer FuzzCollections fuzz_collections
 compile_native_go_fuzzer github.com/OpenPrinting/goipp/fuzzer FuzzTagExtension fuzz_tag_extension
+compile_native_go_fuzzer github.com/OpenPrinting/goipp/fuzzer FuzzAttributeUnpacking fuzz_attribute_unpacking  # new fuzzer
