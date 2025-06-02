@@ -31,7 +31,7 @@ go mod tidy
 go install github.com/AdamKorcz/go-118-fuzz-build@latest
 go get github.com/AdamKorcz/go-118-fuzz-build/testing
 
-compile_native_go_fuzzer ./fuzzer FuzzDecodeBytes fuzz_decode_bytes
+compile_native_go_fuzzer ./fuzzer FuzzDecBytes fuzz_decode_bytes
 compile_native_go_fuzzer ./fuzzer FuzzDecodeBytesEx fuzz_decode_bytes_ex
 compile_native_go_fuzzer ./fuzzer FuzzRoundTrip fuzz_round_trip
 compile_native_go_fuzzer ./fuzzer FuzzCollections fuzz_collections
