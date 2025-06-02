@@ -20,10 +20,10 @@ mkdir -p $WORK/good_ipp_messages_seed_corpus
 cp $SRC/fuzzing/projects/goipp/seeds/good_ipp_messages_seed_corpus/* $WORK/good_ipp_messages_seed_corpus/
 zip -r $OUT/fuzz_round_trip_seed_corpus.zip good_ipp_messages_seed_corpus/
 
-# Corpus for attribute unpacking seeds
-mkdir -p $WORK/attr_unpack_seed_corpus
-cp $SRC/fuzzing/projects/goipp/seeds/attr_unpack_seed_corpus/* $WORK/attr_unpack_seed_corpus/
-zip -r $OUT/fuzz_attribute_unpacking_seed_corpus.zip attr_unpack_seed_corpus/
+# Corpus for tag extension 
+mkdir -p $WORK/extension_tags_seed_corpus
+cp $SRC/fuzzing/projects/goipp/seeds/extension_tags_seed_corpus/* $WORK/extension_tags_seed_corpus/
+zip -r $OUT/fuzz_tag_extension_seed_corpus.zip extension_tags_seed_corpus/
 
 # build dependencies and fuzzers
 cd $SRC/goipp
