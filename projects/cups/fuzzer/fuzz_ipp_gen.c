@@ -1,34 +1,51 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <stdint.h>
-#include <stddef.h>
-#include <ipp.h>
-
-// Dummy callback function for ipp_io_cb_t type
-static ssize_t dummy_io_cb(void *data, void *buf, size_t bytes) {
-    // Simply return the number of bytes requested to simulate a read operation
-    return bytes;
-}
+#include <unistd.h>
+#include <cups/ipp.h>
+#include "file.h"
 
 int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
-    // Initialize variables for the function-under-test
-    void *user_data = (void *)data;  // Cast data to void* for user_data
-    ipp_io_cb_t io_cb = dummy_io_cb; // Use the dummy callback function
-    int flags = 0;                   // Initialize flags to zero
-    ipp_t *request = ippNew();       // Create a new ipp_t object for request
-    ipp_t *response = ippNew();      // Create a new ipp_t object for response
+    // Create a temporary file name using the process ID to avoid conflicts
+    char filename[256];
+    snprintf(filename, sizeof(filename), "/tmp/fuzz_input_%d.ipp", getpid());
 
-    // Ensure request and response are not NULL
-    if (request == NULL || response == NULL) {
-        if (request != NULL) ippDelete(request);
-        if (response != NULL) ippDelete(response);
-        return 0; // Exit if memory allocation failed
+    // Open the file for writing
+    cups_file_t *file = cupsFileOpen(filename, "w");
+    if (!file) {
+        return 0; // Cannot open file, return
     }
 
-    // Call the function-under-test
-    ipp_state_t result = ippReadIO(user_data, io_cb, flags, request, response);
+    // Write the fuzzing data to the file
+    if (cupsFileWrite(file, (const char *)data, size) != (ssize_t)size) {
+        cupsFileClose(file);
+        unlink(filename); // Clean up the file
+        return 0; // Write error, return
+    }
 
-    // Clean up allocated resources
+    // Close the file after writing
+    cupsFileClose(file);
+
+    // Reopen the file for reading
+    file = cupsFileOpen(filename, "r");
+    if (!file) {
+        unlink(filename); // Clean up the file
+        return 0; // Cannot reopen file, return
+    }
+
+    // Create a new IPP request and response objects
+    ipp_t *request = ippNew();
+    ipp_t *response = ippNew();
+
+    // Use ippReadIO with cupsFileRead callback to process the input
+    ipp_state_t state = ippReadIO(file, (ipp_io_cb_t)cupsFileRead, 1, request, response);
+
+    // Cleanup
     ippDelete(request);
     ippDelete(response);
+    cupsFileClose(file);
+    unlink(filename); // Remove the temporary file
 
     return 0;
 }
