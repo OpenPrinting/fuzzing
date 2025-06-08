@@ -1,4 +1,4 @@
-FUZZ_SRCS := $(wildcard fuzz_*.c)
+FUZZ_SRCS := $(filter-out fuzz_ppd.c, $(wildcard fuzz_*.c))
 TARGETS := $(basename $(FUZZ_SRCS))
 
 # For local build
