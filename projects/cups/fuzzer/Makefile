@@ -1,9 +1,5 @@
-TARGETS = \
-	fuzz_cups \
-	fuzz_ipp \
-	fuzz_raster \
-	fuzz_array \
-	# fuzz_ppd
+FUZZ_SRCS := $(filter-out fuzz_ppd.c, $(wildcard fuzz_*.c))
+TARGETS := $(basename $(FUZZ_SRCS))
 
 # For local build
 # export CC=clang
