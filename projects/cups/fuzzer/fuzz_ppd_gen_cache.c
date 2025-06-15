@@ -1,16 +1,23 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
+#include <stdint.h>
 #include "ppd.h"
+#include "ppd-private.h"
 #include "cups.h"
 #include "ipp.h"
 #include "file-private.h"
 
 int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 {
-    // Create a temporary file to simulate a PPD file
+    if (size < 1)
+        return 0;
+
     char filename[256];
     snprintf(filename, sizeof(filename), "/tmp/fuzz_ppd_%d.ppd", getpid());
+
+    // Write the input data to a temporary file
     FILE *file = fopen(filename, "wb");
     if (!file)
         return 0;
@@ -19,42 +26,28 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 
     // Open the PPD file
     ppd_file_t *ppd = ppdOpenFile(filename);
-    if (!ppd)
+    if (ppd)
     {
-        remove(filename);
-        return 0;
+        // Create a cache from the PPD file
+        _ppd_cache_t *cache = _ppdCacheCreateWithPPD(NULL, ppd);
+        if (cache)
+        {
+            // Use the cache
+            _ppdCacheWriteFile(cache, filename, NULL);
+            _ppdCacheGetBin(cache, "output-bin");
+            int exact;
+            _ppdCacheGetPageSize(cache, NULL, "keyword", &exact);
+
+            // Destroy the cache
+            _ppdCacheDestroy(cache);
+        }
+
+        // Close the PPD file
+        ppdClose(ppd);
     }
 
-    // Create a cache with the PPD
-    ipp_t *attrs = ippNew(); // Create a new IPP attributes object
-    _ppd_cache_t *cache = _ppdCacheCreateWithPPD(attrs, ppd);
-    if (cache)
-    {
-        // Optionally write the cache to a file
-        char cache_filename[256];
-        snprintf(cache_filename, sizeof(cache_filename), "/tmp/fuzz_cache_%d.cache", getpid());
-        _ppdCacheWriteFile(cache, cache_filename, attrs);
-
-        // Retrieve data from the cache
-        _ppdCacheGetBin(cache, "output-bin");
-        int exact;
-        _ppdCacheGetPageSize(cache, attrs, "page-size", &exact);
-
-        // Destroy the cache
-        _ppdCacheDestroy(cache);
-
-        // Clean up the cache file
-        remove(cache_filename);
-    }
-
-    // Clean up IPP attributes
-    ippDelete(attrs);
-
-    // Close the PPD file
-    ppdClose(ppd);
-
-    // Remove the temporary PPD file
-    remove(filename);
+    // Clean up the temporary file
+    unlink(filename);
 
     return 0;
 }
