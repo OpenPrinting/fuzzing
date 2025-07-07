@@ -1,0 +1,4 @@
+http://localhost:631/printers/test
+/
+http://cups.example.com:631/jobs/123
+https://secure.printer.local/admin

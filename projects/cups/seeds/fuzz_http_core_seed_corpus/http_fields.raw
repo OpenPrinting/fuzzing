@@ -1,0 +1,7 @@
+Content-Type: application/json
+Authorization: Bearer token123
+Accept: text/html,application/json
+User-Agent: CUPS/2.4.0
+Host: printer.local:631
+Connection: keep-alive
+Content-Length: 1024 
