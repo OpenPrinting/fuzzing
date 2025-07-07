@@ -1,0 +1,8 @@
+[Binary IPP Data]
+Version: 2.0
+Operation: Get-Printer-Attributes (0x000B)
+Request-ID: 1
+Operation Attributes:
+  attributes-charset: utf-8
+  attributes-natural-language: en
+  printer-uri: ipp://localhost:631/printers/test 
