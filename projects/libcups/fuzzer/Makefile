@@ -1,5 +1,5 @@
-TARGETS = \
-	fuzzipp \
+FUZZ_SRCS := $(wildcard fuzz*.c)
+TARGETS := $(basename $(FUZZ_SRCS))
 
 CC=clang
 CXX=clang++
@@ -11,9 +11,9 @@ LINK_FLAGS=-fuse-ld=lld -fPIE -pie -Wl,-z,relro,-z,now -g -Os -lz -lpthread -l:l
 
 All: $(TARGETS)
 
-fuzzipp:
-	$(CC) $(CFLAGS) $(INCDIR) $(BUILD_FLAGS) -c -o fuzzipp.o fuzzipp.c
-	$(CXX) $(CFLAGS) $(LIBDIR) $(LIB_FUZZING_ENGINE) $(LINK_FLAGS) -o fuzzipp fuzzipp.o $(LINK_FLAGS)
+$(TARGETS):
+	$(CC) $(CFLAGS) $(INCDIR) $(BUILD_FLAGS) -c -o $@.o $@.c
+	$(CXX) $(CFLAGS) $(LIBDIR) $(LIB_FUZZING_ENGINE) $(LINK_FLAGS) -o $@ $@.o $(LINK_FLAGS)
 
 ossfuzz:
 	cp $(TARGETS) $(OUT)

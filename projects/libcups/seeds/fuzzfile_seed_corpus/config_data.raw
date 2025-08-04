@@ -1,0 +1,20 @@
+# CUPS Configuration File Test Data
+ServerName localhost
+Port 631
+LogLevel debug
+MaxJobs 100
+
+# Printer Configuration
+<Printer TestPrinter>
+  DeviceURI usb://HP/LaserJet%20P1006
+  State Idle
+  StateMessage "Ready to print"
+  Location "Office"
+  MakeModel "HP LaserJet P1006"
+</Printer>
+
+# Access Control
+<Location />
+  Order allow,deny
+  Allow localhost
+</Location> 

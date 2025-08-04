@@ -1,5 +1,5 @@
-TARGETS = \
-	fuzz_dither
+FUZZ_SRCS := $(wildcard fuzz_*.c)
+TARGETS := $(basename $(FUZZ_SRCS))
 
 export CC=clang
 export CXX=clang++
