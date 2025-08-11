@@ -1,0 +1,6 @@
+POST /ipp/print HTTP/1.1
+Host: localhost:631
+Content-Type: application/ipp
+Content-Length: 47
+User-Agent: CUPS/2.4.0
+
