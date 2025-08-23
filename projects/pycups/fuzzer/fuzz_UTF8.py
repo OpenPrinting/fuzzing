@@ -13,7 +13,7 @@ def TestOneInput(data: bytes):
         return
 
     try:
-        conn = pycups.Connection()
+        conn = cups.Connection()
         # string-to-UTF8 conversions
         conn.getPPD(fuzz_str)
 
