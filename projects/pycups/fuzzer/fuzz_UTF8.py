@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 import sys
 import atheris
-import pycups
+import cups
 
 def TestOneInput(data: bytes):
     fdp = atheris.FuzzedDataProvider(data)
