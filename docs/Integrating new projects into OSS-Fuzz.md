@@ -1,6 +1,6 @@
-# Intigrate New Projects
+# Integrating new projects into OSS-Fuzz
 
-## Compile LibFuzzer.a
+## Compiling LibFuzzer.a
 
 ```bash
 apt install vim git clang
@@ -9,9 +9,9 @@ git clone https://github.com/Dor1s/libfuzzer-workshop.git
 ./libfuzzer-workshop/libFuzzer/Fuzzer/build.sh
 ```
 
-or use `-fsanitize=fuzzer,address` (**Not suggested due to OSS-Fuzz base-image configurations**)
+You can also use `-fsanitize=fuzzer,address` instead, but this is not recommended due to OSS-Fuzz base-image configurations.
 
-## Test with Local OSS-Fuzz
+## Testing with local OSS-Fuzz
 
 ```bash
 python infra/helper.py build_fuzzers --sanitizer $SANITIZER --engine $FUZZING_ENGINE --architecture $ARCHITECTURE $PROJECT_NAME
