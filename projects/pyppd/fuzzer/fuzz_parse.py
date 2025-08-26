@@ -8,7 +8,7 @@ def TestOneInput(data):
     try:
         #fuzz.ppd is a fake file name
         ppd.parse(data, "fuzz.ppd")
-    except Exception:
+    except (ValueError, KeyError, AttributeError, UnicodeDecodeError):
         #parsing errors are expected
         pass
 
