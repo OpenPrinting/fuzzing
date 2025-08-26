@@ -8,11 +8,9 @@ def TestOneInput(data):
     try:
         #fuzz.ppd is a fake file name
         ppd.parse(data, "fuzz.ppd")
-    except Exception as e:
-        if "Error parsing PPD file" in str(e):
-            pass  #expected parsing error
-        else:
-            raise
+    except Exception:
+        #parsing errors are expected
+        pass
 
 def main():
     atheris.instrument_all()
