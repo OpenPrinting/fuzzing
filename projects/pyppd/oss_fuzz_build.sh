@@ -13,5 +13,5 @@ for fuzzer in $(find $SRC/fuzzing/projects/pyppd/fuzzer -name 'fuzz_*.py'); do
     cd "$seed_dir" && zip -r "$OUT/${fuzzer_name}_seed_corpus.zip" .
   fi
   
-  compile_python_fuzzer "$fuzzer"
+  compile_python_fuzzer "$fuzzer" --add-data "$SRC/pyppd:pyppd"
 done
