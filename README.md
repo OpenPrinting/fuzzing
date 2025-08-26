@@ -6,9 +6,11 @@ This repository hosts all fuzzing efforts for OpenPrinting projects, including f
 
 See the `/projects` folder for details on existing integrations of OpenPrinting projects with OSS-Fuzz.
 
-## Google Summer of Code and Winter of Code
+## Contributing
 
 The fuzzing efforts in OpenPrinting were initiated and driven by talented Google Summer of Code and Winter of Code contributors. Check the `/contributors` folder for details about ongoing projects and past success stories.
+
+For contributions, please check the `/docs` folder for documentation on creating new integrations and adding harnesses.
 
 ## Bug Reporting
 
