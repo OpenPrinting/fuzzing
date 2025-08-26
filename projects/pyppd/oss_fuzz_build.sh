@@ -3,6 +3,7 @@
 # build and install pyppd
 cd $SRC/pyppd
 pip3 install .
+python3 setup.py install
 
 # compile all fuzzers with seeds
 for fuzzer in $(find $SRC/fuzzing/projects/pyppd/fuzzer -name 'fuzz_*.py'); do
