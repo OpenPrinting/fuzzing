@@ -3,6 +3,7 @@
 # build and install pyppd
 cd $SRC/pyppd
 pip3 install .
+# python3 setup.py install
 
 # compile all fuzzers with seeds
 for fuzzer in $(find $SRC/fuzzing/projects/pyppd/fuzzer -name 'fuzz_*.py'); do
@@ -13,5 +14,5 @@ for fuzzer in $(find $SRC/fuzzing/projects/pyppd/fuzzer -name 'fuzz_*.py'); do
     cd "$seed_dir" && zip -r "$OUT/${fuzzer_name}_seed_corpus.zip" .
   fi
   
-  compile_python_fuzzer "$fuzzer"
+  compile_python_fuzzer "$fuzzer" --hidden-import=pyppd
 done

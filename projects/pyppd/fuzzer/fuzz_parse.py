@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 import atheris
 import sys
 import pyppd.ppd as ppd
@@ -11,6 +13,7 @@ def TestOneInput(data):
         pass
 
 def main():
+    atheris.instrument_all()
     atheris.Setup(sys.argv, TestOneInput)
     atheris.Fuzz()
 
