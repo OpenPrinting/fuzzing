@@ -1,25 +1,24 @@
-# fuzzing
-This repository is used for fuzzing OpenPrinting projects. It contains fuzz harnesses, corpus and documentation for [OSS-Fuzz](https://github.com/google/oss-fuzz) workflow. 
+# `fuzzing`
 
-## OpenPrinting Projects
+This repository hosts all fuzzing efforts for OpenPrinting projects, including fuzzing harnesses, corpus files, and integrations with [OSS-Fuzz](https://github.com/google/oss-fuzz).
 
-OpenPrinting develops IPP-based printing technology for Linux®/Unix® operating system. The majority of OpenPrinting's projects are developed in C. Fuzzing has been demonstrated to effectively detect vulnerabilities in C-based programs. Therefore, it is crucial to adopt fuzzing within OpenPrinting projects to enhance the security and reliability of these systems.
+## Existing OSS-Fuzz Integrations
 
-Existing integrated OpenPrinting projects include:
+See the `/projects` folder for details on existing integrations of OpenPrinting projects with OSS-Fuzz.
 
-+ [CUPS](https://github.com/OpenPrinting/cups)
-+ [libcups](https://github.com/OpenPrinting/libcups)
-+ [cups-filters](https://github.com/OpenPrinting/cups-filters)
-+ [libcupsfilters](https://github.com/OpenPrinting/libcupsfilters)
+## Contributing
 
-## Debugging Guidance
+The fuzzing efforts in OpenPrinting were initiated and driven by talented Google Summer of Code and Winter of Code contributors. Check the `/contributors` folder for details about ongoing projects and past success stories.
 
-+ [Build](docs/build.md)
-+ [Bug Triage](docs/triage.md)
+For contributions, please check the `/docs` folder for documentation on creating new integrations and adding harnesses. Additionally, consider checking the talks and workshops we hosted in the past in the `/talks` folder.
 
 ## Bug Reporting
-For any security-related findings using this repo, **DO NOT** post the details directly in the public issue tracker of OpenPrining projects. Please consider reporting security vulnerabilities with the following options:
 
-1. Github Security Advisory Panel: Directly report security vulnerabilities to the project's advisory panel and cc the developers of this repo if possible. You can find the detailed guidance for reporting the advisroy in each OpenPrinting project. 
+> [!CAUTION]
+> If you discover potential security issues in OpenPrinting projects (with or without using this repository), **DO NOT** post details directly in OpenPrinting's public issue trackers.
 
-2. Email the Developer Team: Reporting security issues by emailing the developer team listed in each OpenPrinting project or simply contact the developers of this repo.
+Please use one of the following methods to report security issues in OpenPrinting projects:
+
+1. **Use GitHub Security Advisory Panel**: Report security vulnerabilities directly to the project's advisory panel and CC the developers of this repository when possible. Detailed guidance for reporting security issues can be found in each OpenPrinting project's documentation.
+
+2. **Email the development team**: Report security issues by emailing the development team listed in each OpenPrinting project. Alternatively, contact the contributors of this repository directly.

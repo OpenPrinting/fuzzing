@@ -1,0 +1,3 @@
+[submodule "talks/fuzzingintheopen"]
+	path = talks/fuzzingintheopen
+	url = https://github.com/iosifache/fuzzingintheopen
