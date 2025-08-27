@@ -10,7 +10,7 @@ See the `/projects` folder for details on existing integrations of OpenPrinting 
 
 The fuzzing efforts in OpenPrinting were initiated and driven by talented Google Summer of Code and Winter of Code contributors. Check the `/contributors` folder for details about ongoing projects and past success stories.
 
-For contributions, please check the `/docs` folder for documentation on creating new integrations and adding harnesses.
+For contributions, please check the `/docs` folder for documentation on creating new integrations and adding harnesses. Additionally, consider checking the talks and workshops we hosted in the past in the `/talks` folder.
 
 ## Bug Reporting
 
