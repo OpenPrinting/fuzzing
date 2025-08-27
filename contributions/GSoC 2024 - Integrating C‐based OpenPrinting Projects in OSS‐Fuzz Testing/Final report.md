@@ -61,7 +61,16 @@ To date, integrated OSS-Fuzz harnesses have identified **41** issues with **21 r
 2. More C/C++-based projects are needed to be integrated, such as [cups-browsed](https://github.com/OpenPrinting/cups-browsed) and [cups-snap](https://github.com/OpenPrinting/cups-snap)
 3. Integrating OSS-Fuzz into OpenPrinting projects written in other languages such as Python ([pyppd](https://github.com/OpenPrinting/pyppd)) and Go ([ipp-usb](https://github.com/OpenPrinting/ipp-usb)), is feasible.
 4. More effective fuzzing seeds and dictionaries for specific OpenPrinting functionalities are required.
-5. End-to-end testing methods can help identify more exploitable bugs in OpenPrinting projects. Manual security audits can also help.
+5. End-to-end testing methods can help identify more exploitable bugs in OpenPrinting projects. Manual security audits can also help.\
+
+## TODO
+
+1. Recheck all building with -O0 and -g
+2. cups fuzzipp different comparing to libcups fuzzipp
+4. Provice Dictionary
+6. Fix OSS-Fuzz-Gen
+7. libcups delete build.sh in OSS-Fuzz
+8. README projects create a table to track building status
 
 ## Ackowledgment
 
