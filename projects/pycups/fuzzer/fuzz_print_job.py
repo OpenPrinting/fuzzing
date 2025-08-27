@@ -39,6 +39,7 @@ def TestOneInput(data: bytes):
         pass
 
 def main():
+    atheris.instrument_all()
     atheris.Setup(sys.argv, TestOneInput, enable_python_coverage=True)
     atheris.Fuzz()
 
