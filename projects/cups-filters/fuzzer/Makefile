@@ -26,9 +26,9 @@ clean:
 pdfutils.o:
 	$(CC) $(CFLAGS) $(INCDIR) -c -o pdfutils.o ../filter/pdfutils.c
 
-fuzz_pdf: pdfutils.o
-	$(CC) $(CFLAGS) $(INCDIR) $(BUILD_FLAGS) -c -o fuzz_pdf.o fuzz_pdf.c
-	$(CXX) $(CFLAGS) $(LIBDIR) $(LIB_FUZZING_ENGINE) -o fuzz_pdf fuzz_pdf.o pdfutils.o $(LINK_FLAGS)
+$(TARGETS): pdfutils.o
+	$(CC) $(CFLAGS) $(INCDIR) $(BUILD_FLAGS) -c -o $@.o $@.c
+	$(CXX) $(CFLAGS) $(LIBDIR) $(LIB_FUZZING_ENGINE) $(LINK_FLAGS) -o $@ $@.o pdfutils.o $(LINK_FLAGS)
 
 ossfuzz:
 	cp $(TARGETS) $(OUT)
