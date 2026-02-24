@@ -4,7 +4,10 @@ This directory contains fuzzers for the [`go-avahi`](https://github.com/OpenPrin
 
 ## Fuzzers
 
-- `fuzz_domain.go`: Fuzzes the `DomainNormalize` function to validate the CGo boundary and `unsafe.Pointer` usage.
+- `fuzz_domain.go`: Targets `DomainNormalize`.
+- `fuzz_domain_roundtrip.go`: Verifies round-trip consistency between `DomainFrom` and `DomainSlice`.
+- `fuzz_service_name.go`: Tests split/join consistency for service names.
+- `fuzz_state_strings.go`: Tests stability of `String()` methods for library states.
 
 ## Build with OSS-Fuzz locally:
 1. Clone the OSS-Fuzz repo:
@@ -24,7 +27,10 @@ cd oss-fuzz
 python3 infra/helper.py build_fuzzers go-avahi
 ```
 
-4. Run the fuzzer:
+4. Run a fuzzer:
 ```bash
 python3 infra/helper.py run_fuzzer go-avahi fuzz_domain_normalize
+python3 infra/helper.py run_fuzzer go-avahi fuzz_domain_roundtrip
+python3 infra/helper.py run_fuzzer go-avahi fuzz_service_name
+python3 infra/helper.py run_fuzzer go-avahi fuzz_state_strings
 ```
