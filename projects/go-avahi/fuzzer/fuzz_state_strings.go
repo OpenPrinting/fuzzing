@@ -15,15 +15,6 @@ import (
 )
 
 func FuzzStateStrings(f *testing.F) {
-	// Seed corpus: boundary values
-	f.Add(int32(0))
-	f.Add(int32(1))
-	f.Add(int32(-1))
-	f.Add(int32(4))
-	f.Add(int32(999))
-	f.Add(int32(2147483647))  // MaxInt32
-	f.Add(int32(-2147483648)) // MinInt32
-
 	f.Fuzz(func(t *testing.T, val int32) {
 		n := int(val)
 

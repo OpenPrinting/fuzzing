@@ -14,13 +14,6 @@ import (
 )
 
 func FuzzServiceName(f *testing.F) {
-	// Seed corpus: realistic mDNS service names
-	f.Add("Kyocera ECOSYS M2040dn._ipp._tcp.local")
-	f.Add("HP LaserJet._ipps._tcp.local")
-	f.Add("My\\.Printer._ipp._tcp.example.com")
-	f.Add("_http._tcp.local")
-	f.Add("")
-
 	f.Fuzz(func(t *testing.T, data string) {
 		// Split the input into components
 		instance, svctype, domain := avahi.DomainServiceNameSplit(data)

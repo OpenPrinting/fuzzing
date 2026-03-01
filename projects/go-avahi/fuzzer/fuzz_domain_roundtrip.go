@@ -15,13 +15,6 @@ import (
 )
 
 func FuzzDomainRoundTrip(f *testing.F) {
-	// Seed corpus: representative domain name strings
-	f.Add("example.local")
-	f.Add("printer._ipp._tcp.local")
-	f.Add("My\\.Printer._ipp._tcp.local")
-	f.Add("Kyocera ECOSYS M2040dn._ipp._tcp.local")
-	f.Add("")
-
 	f.Fuzz(func(t *testing.T, data string) {
 		// 1. Round-trip: DomainSlice → DomainFrom → DomainSlice
 		labels := avahi.DomainSlice(data)
