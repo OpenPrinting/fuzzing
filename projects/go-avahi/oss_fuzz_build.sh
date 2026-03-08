@@ -1,29 +1,34 @@
 #!/bin/bash -eu
-# Copyright 2025 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#      http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-#
-################################################################################
 
-# Copy fuzzer source into the target library tree
-mkdir -p $SRC/go-avahi/fuzzer
-cp $SRC/fuzzing/projects/go-avahi/fuzzer/fuzz_domain.go $SRC/go-avahi/fuzzer/
-
-# Package seed corpus
+# Package seed corpus — domain normalize
 mkdir -p $WORK/domain_seed_corpus
 cp $SRC/fuzzing/projects/go-avahi/seeds/domain_seed_corpus/* $WORK/domain_seed_corpus/
 cd $WORK
 zip -r $OUT/fuzz_domain_normalize_seed_corpus.zip domain_seed_corpus/
+
+# Package seed corpus — domain round-trip
+mkdir -p $WORK/roundtrip_seed_corpus
+cp $SRC/fuzzing/projects/go-avahi/seeds/roundtrip_seed_corpus/* $WORK/roundtrip_seed_corpus/
+zip -r $OUT/fuzz_domain_roundtrip_seed_corpus.zip roundtrip_seed_corpus/
+
+# Package seed corpus — service name
+mkdir -p $WORK/service_name_seed_corpus
+cp $SRC/fuzzing/projects/go-avahi/seeds/service_name_seed_corpus/* $WORK/service_name_seed_corpus/
+zip -r $OUT/fuzz_service_name_seed_corpus.zip service_name_seed_corpus/
+
+# Package seed corpus — state strings
+mkdir -p $WORK/state_strings_seed_corpus
+cp $SRC/fuzzing/projects/go-avahi/seeds/state_strings_seed_corpus/* $WORK/state_strings_seed_corpus/
+zip -r $OUT/fuzz_state_strings_seed_corpus.zip state_strings_seed_corpus/
+
+# Standard build environment: the library is at /src/go-avahi
+# We clean the fuzzer directory first to ensure a fresh start
+rm -rf $SRC/go-avahi/fuzzer
+mkdir -p $SRC/go-avahi/fuzzer
+cp $SRC/fuzzing/projects/go-avahi/fuzzer/fuzz_domain.go $SRC/go-avahi/fuzzer/
+cp $SRC/fuzzing/projects/go-avahi/fuzzer/fuzz_domain_roundtrip.go $SRC/go-avahi/fuzzer/
+cp $SRC/fuzzing/projects/go-avahi/fuzzer/fuzz_service_name.go $SRC/go-avahi/fuzzer/
+cp $SRC/fuzzing/projects/go-avahi/fuzzer/fuzz_state_strings.go $SRC/go-avahi/fuzzer/
 
 # CGo environment: use pkg-config for architecture-agnostic library resolution
 export CGO_ENABLED=1
@@ -34,6 +39,17 @@ export CGO_LDFLAGS="$(pkg-config --libs avahi-client) -lpthread -lresolv"
 # clang++ link step can resolve the C symbols from the .a archive.
 export CXXFLAGS="${CXXFLAGS:-} $(pkg-config --libs avahi-client) -lpthread -lresolv"
 
+# Copy required shared libraries to $OUT for the runner container
+# We use ldconfig to find the exact paths.
+for lib in libavahi-client.so.3 libavahi-common.so.3 libdbus-1.so.3 \
+           libsystemd.so.0 libgcrypt.so.20 libgpg-error.so.0 \
+           liblzma.so.5 liblz4.so.1 libcap.so.2 libz.so.1; do
+    LIB_PATH=$(ldconfig -p | grep -m 1 " => .*"$lib | awk '{print $4}')
+    if [ -n "$LIB_PATH" ]; then
+        cp "$LIB_PATH" "$OUT/"
+    fi
+done
+
 # Build dependencies and fuzzers
 cd $SRC/go-avahi
 go mod tidy
@@ -41,3 +57,13 @@ go install github.com/AdamKorcz/go-118-fuzz-build@latest
 go get github.com/AdamKorcz/go-118-fuzz-build/testing
 
 compile_native_go_fuzzer ./fuzzer FuzzDomainNormalize fuzz_domain_normalize
+compile_native_go_fuzzer ./fuzzer FuzzDomainRoundTrip fuzz_domain_roundtrip
+compile_native_go_fuzzer ./fuzzer FuzzServiceName fuzz_service_name
+compile_native_go_fuzzer ./fuzzer FuzzStateStrings fuzz_state_strings
+
+# RPATH fix: use patchelf to ensure $ORIGIN is set for all binaries
+for fuzzer in fuzz_domain_normalize fuzz_domain_roundtrip fuzz_service_name fuzz_state_strings; do
+    if [ -f "$OUT/$fuzzer" ]; then
+        patchelf --set-rpath '$ORIGIN' "$OUT/$fuzzer"
+    fi
+done
