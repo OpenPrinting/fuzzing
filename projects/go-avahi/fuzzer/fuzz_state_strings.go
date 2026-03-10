@@ -1,10 +1,11 @@
-/*
- * Fuzz target for go-avahi's enum .String() methods.
- *
- * Tests BrowserEvent, ClientState, EntryGroupState, and ResolverEvent
- * String() methods with arbitrary integer values to ensure they never
- * panic and always return non-empty strings.
- */
+// CGo binding for Avahi
+//
+// Copyright (C) 2024 and up by Alexander Pevzner (pzz@apevzner.com)
+// See LICENSE for license terms and conditions
+//
+// Fuzz target for go-avahi's Domain round-trip consistency
+//
+//go:build linux || freebsd
 
 package fuzzer
 
