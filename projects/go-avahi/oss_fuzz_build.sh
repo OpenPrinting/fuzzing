@@ -83,9 +83,9 @@ compile_native_go_fuzzer ./fuzzer FuzzDNSTXT fuzz_dns_decode_txt
 compile_native_go_fuzzer ./fuzzer FuzzEntryGroupLifecycle fuzz_entry_group
 compile_native_go_fuzzer ./fuzzer FuzzServiceBrowserLifecycle fuzz_service_browser
 
-# RPATH fix: use patchelf to ensure $ORIGIN is set for all binaries
-for fuzzer in fuzz_domain_normalize fuzz_domain_roundtrip fuzz_service_name fuzz_state_strings fuzz_string_array fuzz_client_lifecycle fuzz_dns_decode_a fuzz_dns_decode_aaaa fuzz_dns_decode_txt fuzz_entry_group fuzz_service_browser; do
-    if [ -f "$OUT/$fuzzer" ]; then
-        patchelf --set-rpath '$ORIGIN' "$OUT/$fuzzer"
+# RPATH fix: use patchelf to ensure $ORIGIN is set for all binaries AND libraries
+for f in "$OUT"/*; do
+    if [[ "$f" != *.zip && -f "$f" ]]; then
+        patchelf --set-rpath '$ORIGIN:/out' "$f" 2>/dev/null || true
     fi
 done
