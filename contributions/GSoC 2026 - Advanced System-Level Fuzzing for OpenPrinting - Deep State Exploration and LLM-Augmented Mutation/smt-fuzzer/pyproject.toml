@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "smt-fuzzer"
+version = "0.1.0"
+description = "CUPS/cups-filters SMT-assisted fuzzing evaluation skeleton"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+  "PyYAML>=6.0",
+  "z3-solver>=4.12",
+]
+
+[project.scripts]
+smt-fuzzer = "smt_fuzzer.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

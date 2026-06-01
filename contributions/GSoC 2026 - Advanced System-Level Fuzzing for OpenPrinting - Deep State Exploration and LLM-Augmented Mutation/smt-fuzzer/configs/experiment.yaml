@@ -1,0 +1,46 @@
+experiment:
+  name: cups-smt-fuzz-evaluation
+  default_targets: 3
+  smoke:
+    repetitions: 5
+    hours: 6
+  main:
+    repetitions: 10
+    hours: 24
+
+fuzz_configs:
+  - id: A0
+    name: vanilla
+    description: AFL++ baseline with no dictionaries, grammar, CmpLog, or SMT patching.
+    dictionary: false
+    cmplog: false
+    grammar: false
+    smt: false
+  - id: A1
+    name: dictionary
+    description: Baseline plus CUPS/IPP/PPD/MIME/image dictionaries.
+    dictionary: true
+    cmplog: false
+    grammar: false
+    smt: false
+  - id: A2
+    name: dictionary+cmplog
+    description: Dictionary baseline plus AFL++ CmpLog/Redqueen support.
+    dictionary: true
+    cmplog: true
+    grammar: false
+    smt: false
+  - id: A3
+    name: dictionary+grammar
+    description: Dictionary baseline plus structured grammar/custom mutator.
+    dictionary: true
+    cmplog: false
+    grammar: true
+    smt: false
+  - id: A4
+    name: dictionary+grammar+smt
+    description: Grammar baseline plus SMT-generated patch inputs.
+    dictionary: true
+    cmplog: false
+    grammar: true
+    smt: true

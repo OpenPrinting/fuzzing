@@ -1,0 +1,49 @@
+targets:
+  - id: ppd_text_to_rastertopclx_explore
+    description: Generic PPD string-value sweep through cupsfilter into rastertopclx without bug-specific payloads.
+    ppd_kind: rastertopclx_general_strings
+    document_kind: text
+    executor: cupsfilter
+    input_mime: text/plain
+    output_mime: printer/foo
+    expected_filters:
+      - universal
+      - rastertopclx
+    cases: 8
+    oracle: crash_or_signal
+
+  - id: cups_raster_to_rastertopclx_explore
+    description: Generic CUPS Raster header boundary sweep into rastertopclx.
+    ppd_kind: rastertopclx_plain
+    document_kind: cups_raster_boundary_sweep
+    executor: direct_filter
+    filter_binary: /usr/lib/cups/filter/rastertopclx
+    input_mime: application/vnd.cups-raster
+    expected_filters:
+      - rastertopclx
+    cases: 8
+    oracle: crash_or_signal
+
+  - id: cups_raster_to_rastertoescpx_explore
+    description: Generic single-size PPD plus CUPS Raster boundary sweep into rastertoescpx.
+    ppd_kind: rastertoescpx_size_sweep
+    document_kind: cups_raster_boundary_sweep
+    executor: direct_filter
+    filter_binary: /usr/lib/cups/filter/rastertoescpx
+    input_mime: application/vnd.cups-raster
+    expected_filters:
+      - rastertoescpx
+    cases: 8
+    oracle: reached_only
+
+  - id: pwg_to_raster_resolution_explore
+    description: Generic output-resolution and PWG Raster header boundary sweep into pwgtoraster.
+    ppd_kind: pwg_resolution_sweep
+    document_kind: pwg_raster_boundary_sweep
+    executor: direct_filter
+    filter_binary: /usr/lib/cups/filter/pwgtoraster
+    input_mime: application/vnd.cups-pwg
+    expected_filters:
+      - pwgtoraster
+    cases: 8
+    oracle: crash_or_signal
