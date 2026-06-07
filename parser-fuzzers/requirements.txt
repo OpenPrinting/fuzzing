@@ -1,0 +1,2 @@
+PyYAML>=6.0
+z3-solver>=4.12

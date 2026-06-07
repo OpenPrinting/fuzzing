@@ -1,0 +1,13 @@
+targets:
+  - id: pwg_to_pdf_afl_deep
+    description: Depth-oriented SMT PWG Raster feedback sweep seeded from AFL++ artifacts into ASan-built pwgtopdf with captured PDF output.
+    ppd_kind: pwgtopdf_coverage_options
+    document_kind: pwg_raster_feedback_sweep
+    executor: direct_filter
+    filter_binary: /data/pre-gsoc/cups-filters/pwgtopdf
+    input_mime: application/vnd.cups-pwg
+    output_mime: application/pdf
+    expected_filters:
+      - pwgtopdf
+    cases: 160
+    oracle: crash_or_signal

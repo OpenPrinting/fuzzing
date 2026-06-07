@@ -6,6 +6,22 @@ This repository hosts all fuzzing efforts for OpenPrinting projects, including f
 
 See the `/projects` folder for details on existing integrations of OpenPrinting projects with OSS-Fuzz.
 
+## Parser Fuzzers
+
+The `/parser-fuzzers` directory contains a standalone parser/filter fuzzing
+prototype for OpenPrinting targets. It includes format-aware seed generation,
+SMT-assisted template repair, AFL++ handoff scripts, crash triage helpers, and
+clone-only Python smoke tests.
+
+Start with:
+
+```bash
+cd parser-fuzzers
+python3 -m pip install -e .
+scripts/run_smoke.sh
+scripts/setup_tui.sh --commands
+```
+
 ## Contributing
 
 The fuzzing efforts in OpenPrinting were initiated and driven by talented Google Summer of Code and Winter of Code contributors. Check the `/contributors` folder for details about ongoing projects and past success stories.

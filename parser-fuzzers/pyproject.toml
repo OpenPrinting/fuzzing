@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "parser-fuzzers"
+version = "0.1.0"
+description = "OpenPrinting parser and filter fuzzing toolkit with SMT-assisted templates"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+  "PyYAML>=6.0",
+  "z3-solver>=4.12",
+]
+
+[project.scripts]
+parser-fuzzers = "parser_fuzzers.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

@@ -1,0 +1,24 @@
+targets:
+  - id: pwg_to_pdf_afl_feedback
+    description: SMT PWG Raster feedback sweep seeded from AFL++ queue/crash artifacts into ASan-built pwgtopdf.
+    ppd_kind: pwgtopdf_coverage_options
+    document_kind: pwg_raster_feedback_sweep
+    executor: direct_filter
+    filter_binary: /data/pre-gsoc/cups-filters/pwgtopdf
+    input_mime: application/vnd.cups-pwg
+    expected_filters:
+      - pwgtopdf
+    cases: 128
+    oracle: crash_or_signal
+
+  - id: pwg_to_pclm_afl_feedback
+    description: SMT PWG Raster feedback sweep seeded from AFL++ queue/crash artifacts into ASan-built pwgtopclm.
+    ppd_kind: pwgtopclm_coverage_options
+    document_kind: pwg_raster_feedback_sweep
+    executor: direct_filter
+    filter_binary: /data/pre-gsoc/cups-filters/pwgtopclm
+    input_mime: application/vnd.cups-pwg
+    expected_filters:
+      - pwgtopclm
+    cases: 128
+    oracle: crash_or_signal
