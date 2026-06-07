@@ -1,0 +1,144 @@
+targets:
+  - id: pdf_to_pdftopdf_semantic
+    description: Semantic PDF parser sweep into ASan-built pdftopdf.
+    ppd_kind: pdftopdf_coverage_options
+    document_kind: pdf_semantic_sweep
+    executor: direct_filter
+    filter_binary: /data/pre-gsoc/cups-filters/pdftopdf
+    input_mime: application/pdf
+    expected_filters:
+      - pdftopdf
+    cases: 64
+    oracle: crash_or_signal
+
+  - id: pdf_to_pdftops_semantic
+    description: Semantic PDF parser sweep into ASan-built pdftops.
+    ppd_kind: pdftops_coverage_options
+    document_kind: pdf_semantic_sweep
+    executor: direct_filter
+    filter_binary: /data/pre-gsoc/cups-filters/pdftops
+    input_mime: application/pdf
+    expected_filters:
+      - pdftops
+    cases: 64
+    oracle: crash_or_signal
+
+  - id: pdf_to_mupdftopwg_semantic
+    description: Semantic PDF parser sweep into ASan-built mupdftopwg.
+    ppd_kind: mupdftopwg_coverage_options
+    document_kind: pdf_semantic_sweep
+    executor: direct_filter
+    filter_binary: /data/pre-gsoc/cups-filters/mupdftopwg
+    input_mime: application/pdf
+    expected_filters:
+      - mupdftopwg
+    cases: 64
+    oracle: crash_or_signal
+
+  - id: text_to_texttopdf_semantic
+    description: Semantic text parser sweep into ASan-built texttopdf.
+    ppd_kind: texttopdf_coverage_options
+    document_kind: text_semantic_sweep
+    executor: direct_filter
+    filter_binary: /data/pre-gsoc/cups-filters/texttopdf
+    input_mime: text/plain
+    expected_filters:
+      - texttopdf
+    cases: 64
+    oracle: crash_or_signal
+
+  - id: text_to_texttotext_semantic
+    description: Semantic text parser sweep into ASan-built texttotext.
+    ppd_kind: texttotext_coverage_options
+    document_kind: text_semantic_sweep
+    executor: direct_filter
+    filter_binary: /data/pre-gsoc/cups-filters/texttotext
+    input_mime: text/plain
+    expected_filters:
+      - texttotext
+    cases: 64
+    oracle: crash_or_signal
+
+  - id: postscript_to_gstoraster_semantic
+    description: Semantic PostScript parser sweep into ASan-built gstoraster wrapper.
+    ppd_kind: gstoraster_coverage_options
+    document_kind: postscript_semantic_sweep
+    executor: direct_filter
+    filter_binary: /data/pre-gsoc/cups-filters/gstoraster
+    input_mime: application/postscript
+    expected_filters:
+      - gstoraster
+    cases: 48
+    oracle: crash_or_signal
+
+  - id: postscript_to_gstopdf_semantic
+    description: Semantic PostScript parser sweep into ASan-built gstopdf wrapper.
+    ppd_kind: gstopdf_coverage_options
+    document_kind: postscript_semantic_sweep
+    executor: direct_filter
+    filter_binary: /data/pre-gsoc/cups-filters/gstopdf
+    input_mime: application/postscript
+    expected_filters:
+      - gstopdf
+    cases: 48
+    oracle: crash_or_signal
+
+  - id: postscript_to_gstopxl_semantic
+    description: Semantic PostScript parser sweep into ASan-built gstopxl wrapper.
+    ppd_kind: gstopxl_coverage_options
+    document_kind: postscript_semantic_sweep
+    executor: direct_filter
+    filter_binary: /data/pre-gsoc/cups-filters/gstopxl
+    input_mime: application/postscript
+    expected_filters:
+      - gstopxl
+    cases: 48
+    oracle: crash_or_signal
+
+  - id: pwg_to_pdf_structural
+    description: Structural PWG Raster parser sweep into ASan-built pwgtopdf.
+    ppd_kind: pwgtopdf_coverage_options
+    document_kind: pwg_raster_structural_sweep
+    executor: direct_filter
+    filter_binary: /data/pre-gsoc/cups-filters/pwgtopdf
+    input_mime: application/vnd.cups-pwg
+    expected_filters:
+      - pwgtopdf
+    cases: 64
+    oracle: crash_or_signal
+
+  - id: pwg_to_pclm_structural
+    description: Structural PWG Raster parser sweep into ASan-built pwgtopclm.
+    ppd_kind: pwgtopclm_coverage_options
+    document_kind: pwg_raster_structural_sweep
+    executor: direct_filter
+    filter_binary: /data/pre-gsoc/cups-filters/pwgtopclm
+    input_mime: application/vnd.cups-pwg
+    expected_filters:
+      - pwgtopclm
+    cases: 64
+    oracle: crash_or_signal
+
+  - id: command_to_escpx_semantic
+    description: Semantic CUPS command parser sweep into ASan-built commandtoescpx.
+    ppd_kind: commandtoescpx_coverage_options
+    document_kind: command_semantic_sweep
+    executor: direct_filter
+    filter_binary: /data/pre-gsoc/cups-filters/commandtoescpx
+    input_mime: application/vnd.cups-command
+    expected_filters:
+      - commandtoescpx
+    cases: 40
+    oracle: crash_or_signal
+
+  - id: command_to_pclx_semantic
+    description: Semantic CUPS command parser sweep into ASan-built commandtopclx.
+    ppd_kind: commandtopclx_coverage_options
+    document_kind: command_semantic_sweep
+    executor: direct_filter
+    filter_binary: /data/pre-gsoc/cups-filters/commandtopclx
+    input_mime: application/vnd.cups-command
+    expected_filters:
+      - commandtopclx
+    cases: 40
+    oracle: crash_or_signal

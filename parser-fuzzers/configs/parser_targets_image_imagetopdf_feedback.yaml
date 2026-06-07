@@ -1,0 +1,12 @@
+targets:
+  - id: image_to_imagetopdf_feedback
+    description: Feedback-driven SMT image parser sweep into ASan-built imagetopdf.
+    ppd_kind: imagetopdf_coverage_options
+    document_kind: image_feedback_sweep
+    executor: direct_filter
+    filter_binary: /data/pre-gsoc/cups-filters/imagetopdf
+    input_mime: image/x-portable-anymap
+    expected_filters:
+      - imagetopdf
+    cases: 24
+    oracle: crash_or_signal

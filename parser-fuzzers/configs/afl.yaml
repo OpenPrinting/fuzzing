@@ -1,0 +1,16 @@
+afl:
+  fuzzer: afl-fuzz
+  compiler_cc: afl-clang-fast
+  compiler_cxx: afl-clang-fast++
+  input_seed_dir: seeds/public
+  smt_corpus_dir: work/corpus/smt
+  work_dir: work/afl
+  output_dir: work/afl/out
+  timeout_ms: 3000
+  memory_mb: 1024
+  cmplog_binary_suffix: .cmplog
+  custom_mutator_library: ""
+  env:
+    AFL_NO_UI: "1"
+    AFL_SKIP_CPUFREQ: "1"
+    AFL_I_DONT_CARE_ABOUT_MISSING_CRASHES: "1"

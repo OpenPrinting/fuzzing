@@ -1,0 +1,12 @@
+targets:
+  - id: image_to_imagetops_feedback
+    description: Feedback-driven SMT image parser sweep into ASan-built imagetops.
+    ppd_kind: imagetops_coverage_options
+    document_kind: image_feedback_sweep
+    executor: direct_filter
+    filter_binary: /data/pre-gsoc/cups-filters/imagetops
+    input_mime: image/x-portable-anymap
+    expected_filters:
+      - imagetops
+    cases: 24
+    oracle: crash_or_signal

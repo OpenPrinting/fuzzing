@@ -1,0 +1,49 @@
+targets:
+  - id: ppd_text_to_rastertopclx_smoke
+    description: Generic PPD string-value variation through cupsfilter into rastertopclx.
+    ppd_kind: rastertopclx_general_strings
+    document_kind: text
+    executor: cupsfilter
+    input_mime: text/plain
+    output_mime: printer/foo
+    expected_filters:
+      - universal
+      - rastertopclx
+    cases: 8
+    oracle: crash_or_signal
+
+  - id: cups_raster_to_rastertoescpx_smoke
+    description: Generic CUPS Raster smoke path into rastertoescpx.
+    ppd_kind: rastertoescpx_single_pagesize
+    document_kind: cups_raster_basic
+    executor: cupsfilter
+    input_mime: application/vnd.cups-raster
+    output_mime: printer/foo
+    expected_filters:
+      - rastertoescpx
+    cases: 2
+    oracle: reached_only
+
+  - id: cups_raster_to_rastertopclx_smoke
+    description: CUPS Raster RGB path reaches rastertopclx parser code.
+    ppd_kind: rastertopclx_plain
+    document_kind: cups_raster_mode10
+    executor: direct_filter
+    filter_binary: /usr/lib/cups/filter/rastertopclx
+    input_mime: application/vnd.cups-raster
+    expected_filters:
+      - rastertopclx
+    cases: 2
+    oracle: reached_only
+
+  - id: pwg_to_raster_resolution_smoke
+    description: PWG Raster resolution and geometry stress path into pwgtoraster.
+    ppd_kind: pwgtoraster_1dpi
+    document_kind: pwg_raster_resolution_stress
+    executor: direct_filter
+    filter_binary: /usr/lib/cups/filter/pwgtoraster
+    input_mime: application/vnd.cups-pwg
+    expected_filters:
+      - pwgtoraster
+    cases: 2
+    oracle: crash_or_signal

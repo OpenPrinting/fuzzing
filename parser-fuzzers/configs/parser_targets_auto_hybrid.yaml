@@ -1,0 +1,240 @@
+targets:
+  - id: cups_raster_to_rastertopclx_feedback
+    description: Feedback-driven SMT CUPS Raster sweep into ASan-built rastertopclx.
+    ppd_kind: raster_coverage_options
+    document_kind: cups_raster_feedback_sweep
+    executor: direct_filter
+    filter_binary: /data/pre-gsoc/cups-filters/rastertopclx
+    input_mime: application/vnd.cups-raster
+    expected_filters:
+      - rastertopclx
+    cases: 24
+    oracle: crash_or_signal
+
+  - id: cups_raster_to_rastertoescpx_feedback
+    description: Feedback-driven SMT CUPS Raster sweep into ASan-built rastertoescpx.
+    ppd_kind: raster_coverage_options
+    document_kind: cups_raster_feedback_sweep
+    executor: direct_filter
+    filter_binary: /data/pre-gsoc/cups-filters/rastertoescpx
+    input_mime: application/vnd.cups-raster
+    expected_filters:
+      - rastertoescpx
+    cases: 24
+    oracle: crash_or_signal
+
+  - id: cups_raster_to_rastertops_feedback
+    description: Feedback-driven SMT CUPS Raster sweep into ASan-built rastertops.
+    ppd_kind: raster_coverage_options
+    document_kind: cups_raster_feedback_sweep
+    executor: direct_filter
+    filter_binary: /data/pre-gsoc/cups-filters/rastertops
+    input_mime: application/vnd.cups-raster
+    expected_filters:
+      - rastertops
+    cases: 24
+    oracle: crash_or_signal
+
+  - id: pwg_to_raster_feedback
+    description: Feedback-driven SMT PWG Raster sweep into ASan-built pwgtoraster.
+    ppd_kind: pwg_resolution_coverage
+    document_kind: pwg_raster_feedback_sweep
+    executor: direct_filter
+    filter_binary: /data/pre-gsoc/cups-filters/pwgtoraster
+    input_mime: application/vnd.cups-pwg
+    expected_filters:
+      - pwgtoraster
+    cases: 24
+    oracle: crash_or_signal
+
+  - id: pwg_to_pdf_feedback
+    description: Feedback-driven SMT PWG Raster sweep into ASan-built pwgtopdf.
+    ppd_kind: pwgtopdf_coverage_options
+    document_kind: pwg_raster_feedback_sweep
+    executor: direct_filter
+    filter_binary: /data/pre-gsoc/cups-filters/pwgtopdf
+    input_mime: application/vnd.cups-pwg
+    expected_filters:
+      - pwgtopdf
+    cases: 24
+    oracle: crash_or_signal
+
+  - id: pwg_to_pclm_feedback
+    description: Feedback-driven SMT PWG Raster sweep into ASan-built pwgtopclm.
+    ppd_kind: pwgtopclm_coverage_options
+    document_kind: pwg_raster_feedback_sweep
+    executor: direct_filter
+    filter_binary: /data/pre-gsoc/cups-filters/pwgtopclm
+    input_mime: application/vnd.cups-pwg
+    expected_filters:
+      - pwgtopclm
+    cases: 24
+    oracle: crash_or_signal
+
+  - id: pdf_to_pdftopdf_coverage
+    description: Coverage-discovery PDF parser sweep into ASan-built pdftopdf.
+    ppd_kind: pdftopdf_coverage_options
+    document_kind: pdf_coverage_sweep
+    executor: direct_filter
+    filter_binary: /data/pre-gsoc/cups-filters/pdftopdf
+    input_mime: application/pdf
+    expected_filters:
+      - pdftopdf
+    cases: 8
+    oracle: crash_or_signal
+
+  - id: pdf_to_pdftops_coverage
+    description: Coverage-discovery PDF parser sweep into ASan-built pdftops.
+    ppd_kind: pdftops_coverage_options
+    document_kind: pdf_coverage_sweep
+    executor: direct_filter
+    filter_binary: /data/pre-gsoc/cups-filters/pdftops
+    input_mime: application/pdf
+    expected_filters:
+      - pdftops
+    cases: 8
+    oracle: crash_or_signal
+
+  - id: pdf_to_pdftoraster_coverage
+    description: Coverage-discovery PDF parser sweep into ASan-built pdftoraster.
+    ppd_kind: pdftoraster_coverage_options
+    document_kind: pdf_coverage_sweep
+    executor: direct_filter
+    filter_binary: /data/pre-gsoc/cups-filters/pdftoraster
+    input_mime: application/pdf
+    expected_filters:
+      - pdftoraster
+    cases: 8
+    oracle: crash_or_signal
+
+  - id: pdf_to_mupdftopwg_coverage
+    description: Coverage-discovery PDF parser sweep into ASan-built mupdftopwg.
+    ppd_kind: mupdftopwg_coverage_options
+    document_kind: pdf_coverage_sweep
+    executor: direct_filter
+    filter_binary: /data/pre-gsoc/cups-filters/mupdftopwg
+    input_mime: application/pdf
+    expected_filters:
+      - mupdftopwg
+    cases: 8
+    oracle: crash_or_signal
+
+  - id: image_to_imagetoraster_coverage
+    description: Coverage-discovery image parser sweep into ASan-built imagetoraster.
+    ppd_kind: imagetoraster_coverage_options
+    document_kind: image_coverage_sweep
+    executor: direct_filter
+    filter_binary: /data/pre-gsoc/cups-filters/imagetoraster
+    input_mime: image/x-portable-anymap
+    expected_filters:
+      - imagetoraster
+    cases: 12
+    oracle: crash_or_signal
+
+  - id: image_to_imagetopdf_coverage
+    description: Coverage-discovery image parser sweep into ASan-built imagetopdf.
+    ppd_kind: imagetopdf_coverage_options
+    document_kind: image_coverage_sweep
+    executor: direct_filter
+    filter_binary: /data/pre-gsoc/cups-filters/imagetopdf
+    input_mime: image/x-portable-anymap
+    expected_filters:
+      - imagetopdf
+    cases: 12
+    oracle: crash_or_signal
+
+  - id: image_to_imagetops_coverage
+    description: Coverage-discovery image parser sweep into ASan-built imagetops.
+    ppd_kind: imagetops_coverage_options
+    document_kind: image_coverage_sweep
+    executor: direct_filter
+    filter_binary: /data/pre-gsoc/cups-filters/imagetops
+    input_mime: image/x-portable-anymap
+    expected_filters:
+      - imagetops
+    cases: 12
+    oracle: crash_or_signal
+
+  - id: text_to_texttopdf_coverage
+    description: Coverage-discovery text parser sweep into ASan-built texttopdf.
+    ppd_kind: texttopdf_coverage_options
+    document_kind: text_coverage_sweep
+    executor: direct_filter
+    filter_binary: /data/pre-gsoc/cups-filters/texttopdf
+    input_mime: text/plain
+    expected_filters:
+      - texttopdf
+    cases: 10
+    oracle: crash_or_signal
+
+  - id: text_to_texttotext_coverage
+    description: Coverage-discovery text parser sweep into ASan-built texttotext.
+    ppd_kind: texttotext_coverage_options
+    document_kind: text_coverage_sweep
+    executor: direct_filter
+    filter_binary: /data/pre-gsoc/cups-filters/texttotext
+    input_mime: text/plain
+    expected_filters:
+      - texttotext
+    cases: 10
+    oracle: crash_or_signal
+
+  - id: postscript_to_gstoraster_coverage
+    description: Coverage-discovery PostScript/Ghostscript parser sweep into ASan-built gstoraster wrapper.
+    ppd_kind: gstoraster_coverage_options
+    document_kind: postscript_coverage_sweep
+    executor: direct_filter
+    filter_binary: /data/pre-gsoc/cups-filters/gstoraster
+    input_mime: application/postscript
+    expected_filters:
+      - gstoraster
+    cases: 8
+    oracle: crash_or_signal
+
+  - id: postscript_to_gstopdf_coverage
+    description: Coverage-discovery PostScript/Ghostscript parser sweep into ASan-built gstopdf wrapper.
+    ppd_kind: gstopdf_coverage_options
+    document_kind: postscript_coverage_sweep
+    executor: direct_filter
+    filter_binary: /data/pre-gsoc/cups-filters/gstopdf
+    input_mime: application/postscript
+    expected_filters:
+      - gstopdf
+    cases: 8
+    oracle: crash_or_signal
+
+  - id: postscript_to_gstopxl_coverage
+    description: Coverage-discovery PostScript/Ghostscript parser sweep into ASan-built gstopxl wrapper.
+    ppd_kind: gstopxl_coverage_options
+    document_kind: postscript_coverage_sweep
+    executor: direct_filter
+    filter_binary: /data/pre-gsoc/cups-filters/gstopxl
+    input_mime: application/postscript
+    expected_filters:
+      - gstopxl
+    cases: 8
+    oracle: crash_or_signal
+
+  - id: command_to_escpx_coverage
+    description: Coverage-discovery CUPS command parser sweep into ASan-built commandtoescpx.
+    ppd_kind: commandtoescpx_coverage_options
+    document_kind: command_coverage_sweep
+    executor: direct_filter
+    filter_binary: /data/pre-gsoc/cups-filters/commandtoescpx
+    input_mime: application/vnd.cups-command
+    expected_filters:
+      - commandtoescpx
+    cases: 10
+    oracle: crash_or_signal
+
+  - id: command_to_pclx_coverage
+    description: Coverage-discovery CUPS command parser sweep into ASan-built commandtopclx.
+    ppd_kind: commandtopclx_coverage_options
+    document_kind: command_coverage_sweep
+    executor: direct_filter
+    filter_binary: /data/pre-gsoc/cups-filters/commandtopclx
+    input_mime: application/vnd.cups-command
+    expected_filters:
+      - commandtopclx
+    cases: 10
+    oracle: crash_or_signal

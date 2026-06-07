@@ -1,0 +1,45 @@
+targets:
+  - id: ppd_ipp_parser
+    name: PPD and IPP attribute parser
+    components:
+      - libppd
+      - libcups
+      - cups-filters
+    target_functions:
+      - ppdCreatePPDFromIPP2
+      - ippValidateAttribute
+    dictionaries:
+      - dictionaries/ppd.dict
+      - dictionaries/ipp_options.dict
+  - id: mime_filter_chain
+    name: MIME and filter-chain parser
+    components:
+      - cups-filters
+      - cups-browsed
+    target_functions:
+      - mimeLoadTypes
+      - mimeLoadFilters
+    dictionaries:
+      - dictionaries/mime.dict
+  - id: image_options_parser
+    name: Image/raster header and job-option parser
+    components:
+      - cups-filters
+      - libcupsfilters
+    target_functions:
+      - parseOpts
+      - cupsRasterReadHeader2
+    dictionaries:
+      - dictionaries/image_headers.dict
+      - dictionaries/ipp_options.dict
+  - id: template_probe_pwg
+    name: AFL++ instrumented template probe for generated PWG/CUPS seeds
+    components:
+      - parser-fuzzers
+      - afl++
+    target_functions:
+      - afl_template_probe
+    dictionaries:
+      - dictionaries/pwg_raster.dict
+      - dictionaries/image_headers.dict
+      - dictionaries/ppd.dict

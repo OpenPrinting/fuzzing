@@ -1,0 +1,36 @@
+targets:
+  - id: image_to_imagetoraster_feedback
+    description: Feedback-driven SMT image parser sweep into ASan-built imagetoraster.
+    ppd_kind: imagetoraster_coverage_options
+    document_kind: image_feedback_sweep
+    executor: direct_filter
+    filter_binary: /data/pre-gsoc/cups-filters/imagetoraster
+    input_mime: image/x-portable-anymap
+    expected_filters:
+      - imagetoraster
+    cases: 24
+    oracle: crash_or_signal
+
+  - id: image_to_imagetopdf_feedback
+    description: Feedback-driven SMT image parser sweep into ASan-built imagetopdf.
+    ppd_kind: imagetopdf_coverage_options
+    document_kind: image_feedback_sweep
+    executor: direct_filter
+    filter_binary: /data/pre-gsoc/cups-filters/imagetopdf
+    input_mime: image/x-portable-anymap
+    expected_filters:
+      - imagetopdf
+    cases: 24
+    oracle: crash_or_signal
+
+  - id: image_to_imagetops_feedback
+    description: Feedback-driven SMT image parser sweep into ASan-built imagetops.
+    ppd_kind: imagetops_coverage_options
+    document_kind: image_feedback_sweep
+    executor: direct_filter
+    filter_binary: /data/pre-gsoc/cups-filters/imagetops
+    input_mime: image/x-portable-anymap
+    expected_filters:
+      - imagetops
+    cases: 24
+    oracle: crash_or_signal

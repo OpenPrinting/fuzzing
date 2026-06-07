@@ -1,0 +1,73 @@
+targets:
+  - id: ppd_text_to_rastertopclx_general
+    description: General PPD string-value variation through cupsfilter into rastertopclx using safe literal strings.
+    ppd_kind: rastertopclx_general_strings
+    document_kind: text
+    executor: cupsfilter
+    input_mime: text/plain
+    output_mime: printer/foo
+    expected_filters:
+      - universal
+      - rastertopclx
+    cases: 12
+    oracle: crash_or_signal
+
+  - id: cups_raster_to_rastertopclx_general
+    description: General valid CUPS Raster sweep into ASan-built rastertopclx.
+    ppd_kind: rastertopclx_plain
+    document_kind: cups_raster_general_sweep
+    executor: direct_filter
+    filter_binary: /data/pre-gsoc/cups-filters/rastertopclx
+    input_mime: application/vnd.cups-raster
+    expected_filters:
+      - rastertopclx
+    cases: 12
+    oracle: crash_or_signal
+
+  - id: cups_raster_to_rastertoescpx_general
+    description: General valid CUPS Raster sweep into ASan-built rastertoescpx.
+    ppd_kind: rastertoescpx_size_sweep
+    document_kind: cups_raster_general_sweep
+    executor: direct_filter
+    filter_binary: /data/pre-gsoc/cups-filters/rastertoescpx
+    input_mime: application/vnd.cups-raster
+    expected_filters:
+      - rastertoescpx
+    cases: 12
+    oracle: crash_or_signal
+
+  - id: cups_raster_to_rastertops_general
+    description: General valid CUPS Raster sweep into ASan-built rastertops.
+    ppd_kind: rastertops_plain
+    document_kind: cups_raster_general_sweep
+    executor: direct_filter
+    filter_binary: /data/pre-gsoc/cups-filters/rastertops
+    input_mime: application/vnd.cups-raster
+    expected_filters:
+      - rastertops
+    cases: 12
+    oracle: crash_or_signal
+
+  - id: pwg_to_raster_general
+    description: General valid PWG Raster and PPD resolution sweep into ASan-built pwgtoraster; excludes 2^31 stress value.
+    ppd_kind: pwg_resolution_general
+    document_kind: pwg_raster_general_sweep
+    executor: direct_filter
+    filter_binary: /data/pre-gsoc/cups-filters/pwgtoraster
+    input_mime: application/vnd.cups-pwg
+    expected_filters:
+      - pwgtoraster
+    cases: 15
+    oracle: crash_or_signal
+
+  - id: pwg_to_pdf_general
+    description: General valid PWG Raster sweep into ASan-built pwgtopdf.
+    ppd_kind: pwgtopdf_plain
+    document_kind: pwg_raster_general_sweep
+    executor: direct_filter
+    filter_binary: /data/pre-gsoc/cups-filters/pwgtopdf
+    input_mime: application/vnd.cups-pwg
+    expected_filters:
+      - pwgtopdf
+    cases: 15
+    oracle: crash_or_signal
