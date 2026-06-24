@@ -158,8 +158,8 @@ int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
   cupsArrayDelete(array);
   cupsArrayDelete(dup_array);
 
-  free(first_string);
-  free(second_string);
+  // Free fuzz input data using the correct C++ delete[]
+  free_fuzz_array_data(&fuzzInput);
 
   if (status != 0) {
     abort();
