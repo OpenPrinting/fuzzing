@@ -8,288 +8,434 @@
  * See the file "LICENSE" for more information.
  */
 
- #include "ppd-private.h"
- #include "file-private.h"
- #include <stdio.h>
- #include <unistd.h>
- #include <string.h>
- #include <stdlib.h>
- 
- int fuzz_ppd(char *string, int len, char *filename, char *pwgname);
- void unlink_tempfile(void);
- 
- extern int
- LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size)
- {
-   /* 
-    * We need a huge input, because it should contain
-    * options and ppd file
-    */
-   if (Size < 1000)
-     return 1;
-   
-   atexit(unlink_tempfile);
- 
-   char *filename = (char *)malloc(sizeof(char) * 256);
-   char *pwgname = (char *)malloc(sizeof(char) * 256);
-   sprintf(filename, "/tmp/fuzz_ppd.%d.ppd", getpid());
-   sprintf(pwgname, "/tmp/fuzz_ppd.%d.pwg", getpid());
- 
-   char *string = (char *)calloc(sizeof(char), Size + 1);
-   memcpy(string, Data, Size);
-   int len = Size;
- 
-   fuzz_ppd(string, len, filename, pwgname);
-   
-   unlink_tempfile();
-   free(filename);
-   free(pwgname);
-   free(string);
-   return 0;
- }
- 
- int fuzz_ppd(char *data, int len, char *filename, char *pwgname)
- {
-   int num_options = 0, // number of fuzz-generated options
-       finishings[1024],
-       width,
-       length;
-   cups_option_t *options = NULL;
-   _ppd_cache_t *pc,
-                *pc2;
-   ppd_choice_t *ppd_bin;
-   ppd_attr_t *attr;
-   ppd_size_t minsize,
-             maxsize,
-             *size;
-   cups_page_header2_t header;
-   ipp_t *job;
- 
-   /*
-    * Create and fill variables (options)
-    * with fuzz-generated values
-    */
- 
-   char *ppdsize = strdup(data);
-   len -= strlen(ppdsize) + 1;
-   if (len <= 0)
-     return 1;
-   data += strlen(ppdsize) + 1;
- 
-   char *legacy = strdup(data);
-   len -= strlen(legacy) + 1;
-   if (len <= 0)
-     return 1;
-   data += strlen(legacy) + 1;
- 
-   char *pwg = strdup(data);
-   len -= strlen(pwg) + 1;
-   if (len <= 0)
-     return 1;
-   data += strlen(pwg) + 1;
- 
-   char *ppdmedia = strdup(data);
-   len -= strlen(ppdmedia) + 1;
-   if (len <= 0)
-     return 1;
-   data += strlen(ppdmedia) + 1;
- 
-   char *marked_option = strdup(data);
-   len -= strlen(marked_option) + 1;
-   if (len <= 0)
-     return 1;
-   data += strlen(marked_option) + 1;
-   
-   char *options_str = strdup(data);
-   len -= strlen(options_str) + 1;
-   if (len <= 0)
-     return 1;
-   data += strlen(options_str) + 1;
- 
-   char buf[12] = {0};
-   if (!strncpy(buf, data, 11))
-     return 1;
-   
-   length = atoi(buf);
-   data += strlen(buf);
-   len -= strlen(buf);
- 
-   if (!strncpy(buf, data, 11))
-     return (1);
- 
-   width = atoi(buf);
-   data += strlen(buf);
-   len -= strlen(buf);
- 
-   /*
-    * Create and fill the array of cups options
-    * and values to check correct work of 
-    * ppdMarkOption(), cupsGetOption(), 
-    * cupsGetConflicts(), cupsResolveConflicts()
-    * and ppdInstallableConflict() functions
+#include "ppd-private.h"
+#include "file-private.h"
+#include <stdio.h>
+#include <unistd.h>
+#include <string.h>
+#include <stdlib.h>
+
+typedef struct
+{
+  char *ppdsize;
+  char *legacy;
+  char *pwg;
+  char *ppdmedia;
+  char *marked_option;
+  char *options_str;
+  char **cups_options;
+  char **cups_values;
+  int elem_counter;
+  cups_option_t *options;
+  int num_options;
+  _ppd_cache_t *pc;
+  ipp_t *job;
+  ppd_file_t *ppd;
+} fuzz_ppd_ctx_t;
+
+static void
+cleanup_resources(fuzz_ppd_ctx_t *ctx)
+{
+  if (!ctx)
+    return;
+
+  if (ctx->cups_options)
+  {
+    for (int i = 0; i < ctx->elem_counter; i++)
+      free(ctx->cups_options[i]);
+    free(ctx->cups_options);
+    ctx->cups_options = NULL;
+  }
+
+  if (ctx->cups_values)
+  {
+    for (int i = 0; i < ctx->elem_counter; i++)
+      free(ctx->cups_values[i]);
+    free(ctx->cups_values);
+    ctx->cups_values = NULL;
+  }
+
+  if (ctx->options)
+  {
+    cupsFreeOptions(ctx->num_options, ctx->options);
+    ctx->options = NULL;
+    ctx->num_options = 0;
+  }
+
+  if (ctx->pc)
+  {
+    _ppdCacheDestroy(ctx->pc);
+    ctx->pc = NULL;
+  }
+
+  if (ctx->job)
+  {
+    ippDelete(ctx->job);
+    ctx->job = NULL;
+  }
+
+  if (ctx->ppd)
+  {
+    ppdClose(ctx->ppd);
+    ctx->ppd = NULL;
+  }
+
+  free(ctx->ppdsize);
+  ctx->ppdsize = NULL;
+  free(ctx->legacy);
+  ctx->legacy = NULL;
+  free(ctx->pwg);
+  ctx->pwg = NULL;
+  free(ctx->ppdmedia);
+  ctx->ppdmedia = NULL;
+  free(ctx->marked_option);
+  ctx->marked_option = NULL;
+  free(ctx->options_str);
+  ctx->options_str = NULL;
+}
+
+int fuzz_ppd(char *string, int len, char *filename, char *pwgname);
+void unlink_tempfile(void);
+
+extern int
+LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size)
+{
+  /*
+   * We need a huge input, because it should contain
+   * options and ppd file
    */
- 
-   char **cups_options = (char **)malloc(sizeof(char *) * 2);
-   char **cups_values = (char **)malloc(sizeof(char *) * 2);
-   int elem_counter = 0, counter = 0;
- 
-   for (int i = 0; i < strlen(options_str); i++)
-   {
-     cups_options[elem_counter] = (char *)malloc(sizeof(char));
-     cups_values[elem_counter] = (char *)malloc(sizeof(char));
-     cups_options[elem_counter][0] = '\0';
-     cups_values[elem_counter][0] = '\0';
-     if (!options_str[i])
-       break;
-       
-     counter = 0;
-     while(options_str[i] != '=' && options_str[i] && options_str[i] != ' ')
-     {
-       cups_options[elem_counter] = (char *)realloc(cups_options[elem_counter], sizeof(char) * (counter + 2));
-       cups_options[elem_counter][counter] = options_str[i];
-       counter++;
-       i++;
-     }
-     cups_options[elem_counter][counter] = '\0';
-     if (options_str[i] == '=')
-     {
-       ++i;
-       counter = 0;
-       while(options_str[i] != ' ' && options_str[i])
-       {
-         cups_values[elem_counter] = (char *)realloc(cups_values[elem_counter], sizeof(char) * (counter + 2));
-         cups_values[elem_counter][counter] = options_str[i];
-         counter++;
-         i++;
-       }
-       cups_values[elem_counter][counter] = '\0';
-     }
-     elem_counter++;
-     cups_options = (char **)realloc(cups_options, sizeof(char *) * (elem_counter + 1));
-     cups_values = (char **)realloc(cups_values, sizeof(char *) * (elem_counter + 1));
-   }
-   if (len <= 0)
-     return 1;
-   
-   /*
-    * Create and fill .ppd file
-    * with fuzz-generated data
-   */
-   
-   FILE *fp = fopen(filename, "wb");
-   if (!fp)
-     return 1;
- 
-   fwrite(data, sizeof(*data), len, fp);
-   fclose(fp);
- 
-   ppd_file_t *ppd = NULL; 
-   
-   if ((ppd = ppdOpenFile(filename)) == NULL)
-   {
-     ppd_status_t err; /* Last error in file */
-     int line;         /* Line number in file */
-     ppdLastError(&line);
-     ppdErrorString(err);
-     return 1;
-   }
-   
-   pc = _ppdCacheCreateWithPPD(NULL, ppd);
-   
-   /*
-    * Do pwg tests from testpwg.c
-    */
-   
-   char *pagesize;
-   _ppdCacheWriteFile(pc, pwgname, NULL);
-   pc2 = _ppdCacheCreateWithFile(pwgname, NULL);
-   _ppdCacheDestroy(pc2);
-   ppdPageSize(ppd, ppdsize);
-   pagesize = _ppdCacheGetPageSize(pc, NULL, ppdsize, NULL);
-   job = ippNew();
-   ippDelete(job);
-   pwgMediaForPWG(pwg);
-   pwgMediaForLegacy(legacy);
-   pwgMediaForPPD(ppdmedia);
-   pwgMediaForSize(width, length);
- 
-   num_options = cupsParseOptions(options_str, num_options, &options);
-   ppdMarkDefaults(ppd);
-   cupsMarkOptions(ppd, num_options, options);
-   ppdConflicts(ppd);
- 
-   _ppdCacheGetFinishingValues(ppd, pc, (int)sizeof(finishings) / sizeof(finishings[0]), finishings);
-   cupsRasterInterpretPPD(&header, ppd, num_options, options, NULL);
-   
-   if (strlen(marked_option) > 0)
-   {
-     char *choice = (char *)calloc(1, sizeof(char));
-     for (int i = 0; i < strlen(marked_option); i++)
-     {
-       if (!marked_option[i] || marked_option[i] != ' ')
-       {
-         choice = (char *)realloc(choice, sizeof(char) * (i + 2));
-         choice[i] = marked_option[i];
-         choice[i + 1] = '\0';
-       }
-       else
-         break;
-     }
-     ppdFindAttr(ppd, choice, marked_option + strlen(choice));
-     ppdFindNextAttr(ppd, choice, NULL);
-     if ((ppd_bin = ppdFindMarkedChoice(ppd, choice)) != NULL)
-       _ppdCacheGetBin(pc, ppd_bin->choice);
-     char buffer[1024] = {0};
-     ppdLocalizeIPPReason(ppd, choice, marked_option + strlen(choice), buffer, sizeof(buffer));
-     for (int i = 0; i < elem_counter; i++)
-     {
-       ppdMarkOption(ppd, cups_options[i], cups_values[i]);
-       cupsGetOption(cups_options[i], num_options, options);
-       num_options = cupsGetConflicts(ppd, cups_options[i], cups_values[i], &options);
-       cupsResolveConflicts(ppd, cups_options[i], cups_values[i], &num_options, &options);
-       ppdInstallableConflict(ppd, cups_options[i], cups_values[i]);
-     }
-     ppdInstallableConflict(ppd, options_str, choice);
-     ppdLocalizeMarkerName(ppd, choice);
-     free(choice);
-   }
- 
-   for (int i = 0; i < 5; i++)
-     ppdEmitString(ppd, i, 0.0);
-   
-   ppdPageSizeLimits(ppd, &minsize, &maxsize);
-   ppdPageSize(ppd, NULL);
- 
-   for (int i = 0; i < elem_counter; i++)
-   {
-     free(cups_options[i]);
-     free(cups_values[i]);
-   }
-   
-   free(cups_options);
-   free(cups_values);
- 
-   cupsFreeOptions(num_options, options);
-   _ppdCacheDestroy(pc);
-   ppdClose(ppd);
-   
-   free(options_str);
-   free(ppdsize);
-   free(marked_option);
-   free(legacy);
-   free(pwg);
-   free(ppdmedia);
-   return 0;
- }
- 
- void unlink_tempfile(void)
- {
-   char filename[256];
-   sprintf(filename, "/tmp/fuzz_ppd.%d.ppd", getpid());
-   unlink(filename);
-   sprintf(filename, "/tmp/fuzz_ppd.%d.pwg", getpid());
-   unlink(filename);
-   sprintf(filename, "%s.N", filename);
-   unlink(filename);
- }
- 
+  if (Size < 1000)
+    return 1;
+
+  atexit(unlink_tempfile);
+
+  char *filename = (char *)malloc(sizeof(char) * 256);
+  char *pwgname = (char *)malloc(sizeof(char) * 256);
+  if (!filename || !pwgname)
+  {
+    free(filename);
+    free(pwgname);
+    return 1;
+  }
+
+  sprintf(filename, "/tmp/fuzz_ppd.%d.ppd", getpid());
+  sprintf(pwgname, "/tmp/fuzz_ppd.%d.pwg", getpid());
+
+  char *string = (char *)calloc(sizeof(char), Size + 1);
+  if (!string)
+  {
+    free(filename);
+    free(pwgname);
+    return 1;
+  }
+  memcpy(string, Data, Size);
+  int len = Size;
+
+  fuzz_ppd(string, len, filename, pwgname);
+
+  unlink_tempfile();
+  free(filename);
+  free(pwgname);
+  free(string);
+  return 0;
+}
+
+static int
+consume_string(char **dest, char **data, int *len)
+{
+  *dest = strdup(*data);
+  if (!*dest)
+    return -1;
+
+  int consumed = (int)strlen(*dest) + 1;
+  *len -= consumed;
+  if (*len <= 0)
+    return -1;
+
+  *data += consumed;
+  return 0;
+}
+
+int fuzz_ppd(char *data, int len, char *filename, char *pwgname)
+{
+  fuzz_ppd_ctx_t ctx = {0};
+  int ret = 0;
+  int finishings[1024];
+  int width;
+  int length;
+  ppd_choice_t *ppd_bin;
+  ppd_size_t minsize, maxsize;
+  cups_page_header2_t header;
+
+  do
+  {
+    if (consume_string(&ctx.ppdsize, &data, &len))
+    {
+      ret = 1;
+      break;
+    }
+    if (consume_string(&ctx.legacy, &data, &len))
+    {
+      ret = 1;
+      break;
+    }
+    if (consume_string(&ctx.pwg, &data, &len))
+    {
+      ret = 1;
+      break;
+    }
+    if (consume_string(&ctx.ppdmedia, &data, &len))
+    {
+      ret = 1;
+      break;
+    }
+    if (consume_string(&ctx.marked_option, &data, &len))
+    {
+      ret = 1;
+      break;
+    }
+    if (consume_string(&ctx.options_str, &data, &len))
+    {
+      ret = 1;
+      break;
+    }
+
+    char buf[12] = {0};
+    if (!strncpy(buf, data, 11))
+    {
+      ret = 1;
+      break;
+    }
+    length = atoi(buf);
+    data += strlen(buf);
+    len -= strlen(buf);
+
+    if (!strncpy(buf, data, 11))
+    {
+      ret = 1;
+      break;
+    }
+    width = atoi(buf);
+    data += strlen(buf);
+    len -= strlen(buf);
+
+    ctx.cups_options = (char **)malloc(sizeof(char *) * 2);
+    ctx.cups_values = (char **)malloc(sizeof(char *) * 2);
+    if (!ctx.cups_options || !ctx.cups_values)
+    {
+      ret = 1;
+      break;
+    }
+
+    ctx.elem_counter = 0;
+    int counter = 0;
+    size_t options_len = strlen(ctx.options_str);
+    for (size_t i = 0; i < options_len; i++)
+    {
+      ctx.cups_options[ctx.elem_counter] = (char *)malloc(sizeof(char));
+      ctx.cups_values[ctx.elem_counter] = (char *)malloc(sizeof(char));
+      if (!ctx.cups_options[ctx.elem_counter] || !ctx.cups_values[ctx.elem_counter])
+      {
+        ret = 1;
+        break;
+      }
+
+      ctx.cups_options[ctx.elem_counter][0] = '\0';
+      ctx.cups_values[ctx.elem_counter][0] = '\0';
+
+      if (!ctx.options_str[i])
+        break;
+
+      counter = 0;
+      while(ctx.options_str[i] != '=' && ctx.options_str[i] && ctx.options_str[i] != ' ')
+      {
+        char *tmp = (char *)realloc(ctx.cups_options[ctx.elem_counter], sizeof(char) * (counter + 2));
+        if (!tmp)
+        {
+          ret = 1;
+          break;
+        }
+        ctx.cups_options[ctx.elem_counter] = tmp;
+        ctx.cups_options[ctx.elem_counter][counter] = ctx.options_str[i];
+        counter++;
+        i++;
+      }
+      if (ret)
+        break;
+
+      ctx.cups_options[ctx.elem_counter][counter] = '\0';
+      if (ctx.options_str[i] == '=')
+      {
+        ++i;
+        counter = 0;
+        while(ctx.options_str[i] != ' ' && ctx.options_str[i])
+        {
+          char *tmp = (char *)realloc(ctx.cups_values[ctx.elem_counter], sizeof(char) * (counter + 2));
+          if (!tmp)
+          {
+            ret = 1;
+            break;
+          }
+          ctx.cups_values[ctx.elem_counter] = tmp;
+          ctx.cups_values[ctx.elem_counter][counter] = ctx.options_str[i];
+          counter++;
+          i++;
+        }
+        if (ret)
+          break;
+        ctx.cups_values[ctx.elem_counter][counter] = '\0';
+      }
+
+      ctx.elem_counter++;
+      char **new_options = (char **)realloc(ctx.cups_options, sizeof(char *) * (ctx.elem_counter + 1));
+      char **new_values = (char **)realloc(ctx.cups_values, sizeof(char *) * (ctx.elem_counter + 1));
+      if (!new_options || !new_values)
+      {
+        free(new_options);
+        free(new_values);
+        ret = 1;
+        break;
+      }
+      ctx.cups_options = new_options;
+      ctx.cups_values = new_values;
+    }
+
+    if (ret || len <= 0)
+    {
+      ret = 1;
+      break;
+    }
+
+    FILE *fp = fopen(filename, "wb");
+    if (!fp)
+    {
+      ret = 1;
+      break;
+    }
+
+    size_t written = fwrite(data, sizeof(*data), len, fp);
+    fclose(fp);
+    if ((int)written != len)
+    {
+      ret = 1;
+      break;
+    }
+
+    ctx.ppd = ppdOpenFile(filename);
+    if (!ctx.ppd)
+    {
+      ppd_status_t err;
+      int line;
+      err = ppdLastError(&line);
+      ppdErrorString(err);
+      ret = 1;
+      break;
+    }
+
+    ctx.pc = _ppdCacheCreateWithPPD(NULL, ctx.ppd);
+    if (!ctx.pc)
+    {
+      ret = 1;
+      break;
+    }
+
+    char *pagesize;
+    _ppdCacheWriteFile(ctx.pc, pwgname, NULL);
+    _ppd_cache_t *pc2 = _ppdCacheCreateWithFile(pwgname, NULL);
+    if (pc2)
+      _ppdCacheDestroy(pc2);
+    ppdPageSize(ctx.ppd, ctx.ppdsize);
+    pagesize = _ppdCacheGetPageSize(ctx.pc, NULL, ctx.ppdsize, NULL);
+    (void)pagesize;
+
+    ctx.job = ippNew();
+    if (ctx.job)
+    {
+      ippDelete(ctx.job);
+      ctx.job = NULL;
+    }
+
+    pwgMediaForPWG(ctx.pwg);
+    pwgMediaForLegacy(ctx.legacy);
+    pwgMediaForPPD(ctx.ppdmedia);
+    pwgMediaForSize(width, length);
+
+    ctx.num_options = cupsParseOptions(ctx.options_str, 0, &ctx.options);
+    ppdMarkDefaults(ctx.ppd);
+    cupsMarkOptions(ctx.ppd, ctx.num_options, ctx.options);
+    ppdConflicts(ctx.ppd);
+
+    _ppdCacheGetFinishingValues(ctx.ppd, ctx.pc, (int)sizeof(finishings) / sizeof(finishings[0]), finishings);
+    cupsRasterInterpretPPD(&header, ctx.ppd, ctx.num_options, ctx.options, NULL);
+
+    if (strlen(ctx.marked_option) > 0)
+    {
+      char *choice = (char *)calloc(1, sizeof(char));
+      if (!choice)
+      {
+        ret = 1;
+        break;
+      }
+
+      for (int i = 0; i < (int)strlen(ctx.marked_option); i++)
+      {
+        if (!ctx.marked_option[i] || ctx.marked_option[i] != ' ')
+        {
+          char *tmp = (char *)realloc(choice, sizeof(char) * (i + 2));
+          if (!tmp)
+          {
+            free(choice);
+            ret = 1;
+            break;
+          }
+          choice = tmp;
+          choice[i] = ctx.marked_option[i];
+          choice[i + 1] = '\0';
+        }
+        else
+          break;
+      }
+      if (ret)
+        break;
+
+      ppdFindAttr(ctx.ppd, choice, ctx.marked_option + strlen(choice));
+      ppdFindNextAttr(ctx.ppd, choice, NULL);
+      if ((ppd_bin = ppdFindMarkedChoice(ctx.ppd, choice)) != NULL)
+        _ppdCacheGetBin(ctx.pc, ppd_bin->choice);
+      char buffer[1024] = {0};
+      ppdLocalizeIPPReason(ctx.ppd, choice, ctx.marked_option + strlen(choice), buffer, sizeof(buffer));
+      for (int i = 0; i < ctx.elem_counter; i++)
+      {
+        ppdMarkOption(ctx.ppd, ctx.cups_options[i], ctx.cups_values[i]);
+        cupsGetOption(ctx.cups_options[i], ctx.num_options, ctx.options);
+        ctx.num_options = cupsGetConflicts(ctx.ppd, ctx.cups_options[i], ctx.cups_values[i], &ctx.options);
+        cupsResolveConflicts(ctx.ppd, ctx.cups_options[i], ctx.cups_values[i], &ctx.num_options, &ctx.options);
+        ppdInstallableConflict(ctx.ppd, ctx.cups_options[i], ctx.cups_values[i]);
+      }
+      ppdInstallableConflict(ctx.ppd, ctx.options_str, choice);
+      ppdLocalizeMarkerName(ctx.ppd, choice);
+      free(choice);
+    }
+
+    for (int i = 0; i < 5; i++)
+      ppdEmitString(ctx.ppd, i, 0.0);
+
+    ppdPageSizeLimits(ctx.ppd, &minsize, &maxsize);
+    ppdPageSize(ctx.ppd, NULL);
+
+  } while (0);
+
+  cleanup_resources(&ctx);
+  return ret;
+}
+
+void unlink_tempfile(void)
+{
+  char filename[256];
+  sprintf(filename, "/tmp/fuzz_ppd.%d.ppd", getpid());
+  unlink(filename);
+  sprintf(filename, "/tmp/fuzz_ppd.%d.pwg", getpid());
+  unlink(filename);
+  sprintf(filename, "%s.N", filename);
+  unlink(filename);
+}
