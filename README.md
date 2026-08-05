@@ -6,21 +6,14 @@ This repository hosts all fuzzing efforts for OpenPrinting projects, including f
 
 See the `/projects` folder for details on existing integrations of OpenPrinting projects with OSS-Fuzz.
 
-## Parser Fuzzers
+## cups-filters libFuzzer Targets
 
-The `/parser-fuzzers` directory contains a standalone parser/filter fuzzing
-prototype for OpenPrinting targets. It includes format-aware seed generation,
-SMT-assisted template repair, AFL++ handoff scripts, crash triage helpers, and
-clone-only Python smoke tests.
+The `/parser-fuzzers` directory contains an OSS-Fuzz project for the current
+OpenPrinting cups-filters stack. It builds 12 in-process libFuzzer targets with
+matching seed corpora, dictionaries, and runtime options.
 
-Start with:
-
-```bash
-cd parser-fuzzers
-python3 -m pip install -e .
-scripts/run_smoke.sh
-scripts/setup_tui.sh --commands
-```
+See [`parser-fuzzers/README.md`](parser-fuzzers/README.md) for the target list
+and OSS-Fuzz validation commands.
 
 ## Contributing
 

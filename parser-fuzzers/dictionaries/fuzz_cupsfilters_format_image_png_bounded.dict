@@ -1,0 +1,6 @@
+token_0="\x89PNG\x0d\x0a\x1a\x0a"
+token_1="IHDR"
+token_2="IDAT"
+token_3="IEND"
+token_4="tEXt"
+token_5="iCCP"

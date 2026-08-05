@@ -1,0 +1,18 @@
+homepage: "https://github.com/OpenPrinting/cups-filters"
+main_repo: "https://github.com/OpenPrinting/cups-filters.git"
+language: c++
+
+primary_contact: "jiongchiyu@gmail.com"
+auto_ccs:
+  - "till.kamppeter@gmail.com"
+  - "ossfuzz@iosifache.me"
+  - "msweet@msweet.org"
+
+architectures:
+  - x86_64
+
+sanitizers:
+  - address
+
+fuzzing_engines:
+  - libfuzzer
