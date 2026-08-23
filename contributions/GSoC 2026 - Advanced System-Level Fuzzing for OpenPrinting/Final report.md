@@ -8,7 +8,7 @@
 | Program | Google Summer of Code 2026 |
 | Original project idea | [System-Level Fuzzing for Parsing Features in OpenPrinting Projects](https://openprinting.github.io/gsoc/2026/System-Level-Fuzzing-for-Parsing-Features-in-OpenPrinting-Projects) |
 | Accepted proposal summary | [OpenPrinting GSoC 2026 contributor announcement](https://openprinting.github.io/OpenPrinting-News-Google-Summer-of-Code-2026-All-contributors-did-a-great-start) |
-| Upstream OpenPrinting contribution | Pull request pending |
+| Upstream OpenPrinting contribution | [OpenPrinting/fuzzing#58](https://github.com/OpenPrinting/fuzzing/pull/58) |
 | OSS-Fuzz integration | Pull request pending after upstream harness review |
 
 ## Project Overview
@@ -322,7 +322,7 @@ At the time of this draft:
 
 | Integration step | Status |
 | --- | --- |
-| OpenPrinting/fuzzing contribution | Prepared in this repository; pull request pending |
+| OpenPrinting/fuzzing contribution | [OpenPrinting/fuzzing#58](https://github.com/OpenPrinting/fuzzing/pull/58) |
 | Google OSS-Fuzz project update | Pending upstream review and pull request |
 | Production OSS-Fuzz scheduling | Begins after maintainer review and merge |
 
