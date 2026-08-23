@@ -1,11 +1,10 @@
-## Fuzzing Harness for cups-filters
+# cups-filters OSS-Fuzz integration
 
-The code in this directory contain:
+The maintained cups-filters harnesses, seed corpora, dictionaries, and build
+logic live in [`../../parser-fuzzers`](../../parser-fuzzers). OSS-Fuzz copies
+`oss_fuzz_build.sh` to `$SRC/build.sh`; this entry point delegates to that
+single upstream-owned implementation.
 
-+ Fuzzing harness for OSS-Fuzz
-1. **Default** fuzz_texttopdf_2.c supports (ubuntu 22.04+) cups-filters-2.x, libcupsfilters-2.x
-2. fuzz_texttopdf_1.c works for cups-filters-1.x 
-
-## TODO
-
-Enable seperate make for cups-filters-1.x
+The integration builds the current split printing stack: CUPS, PDFio,
+libcupsfilters, libppd, and cups-filters. It exports 25 continuous libFuzzer
+targets plus the existing raw-PDF compatibility target `fuzz_pdf`.
