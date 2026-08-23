@@ -1,0 +1,6 @@
+# SPDX-License-Identifier: Apache-2.0
+
+# libppd's ASCII85 encoder shifts promoted unsigned-byte values through a
+# signed int. Normal high-bit image pixels reach this known upstream UB.
+[undefined]
+fun:ps_ascii85
