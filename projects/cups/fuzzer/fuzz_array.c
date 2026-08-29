@@ -153,6 +153,10 @@ int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
     if (text != saved[i])
       break;
   }
+	
+  for (char *elem = (char *)cupsArrayGetFirst(dup_array); elem != NULL; elem = (char *)cupsArrayGetNext(dup_array)) {
+    free(elem);  // Explicitly free each strdup'd string
+  }
 
   // Delete the arrays...
   cupsArrayDelete(array);
