@@ -52,6 +52,7 @@ make
 pushd ossfuzz/
 make
 make ossfuzz
+cp *.options *.dict $OUT/
 popd
 
 # prepare corpus
