@@ -1,0 +1,10 @@
+1HTTP/1.1 200 OK
+Content-Type: text/plain; charset=utf-8
+Content-Length: 144
+Keep-Alive: timeout=10
+Set-Cookie: a=b
+
+Hello from the fuzzer seed corpus.
+Hello from the fuzzer seed corpus.
+Hello from the fuzzer seed corpus.
+Hello from the fuzzer seed corpus.

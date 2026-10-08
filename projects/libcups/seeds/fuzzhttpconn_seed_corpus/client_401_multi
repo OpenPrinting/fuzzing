@@ -1,0 +1,4 @@
+1HTTP/1.1 401 Unauthorized
+WWW-Authenticate: PeerCred, Bearer realm="https://auth" scope="ipp", Basic realm="CUPS" username="guest"
+Content-Length: 0
+

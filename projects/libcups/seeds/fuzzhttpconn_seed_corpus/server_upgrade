@@ -1,0 +1,5 @@
+0OPTIONS * HTTP/1.1
+Host: localhost
+Connection: Upgrade
+Upgrade: TLS/1.2
+
