@@ -1,0 +1,10 @@
+0OPTIONS * HTTP/1.1
+Host: localhost
+
+HEAD / HTTP/1.1
+Host: localhost
+Connection: Keep-Alive
+
+GET /en.strings HTTP/1.0
+Host: localhost
+

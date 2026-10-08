@@ -1,0 +1,6 @@
+0GET /ipp/print HTTP/1.1
+Host: localhost:631
+Accept-Encoding: gzip;q=0.5, deflate, identity
+Cookie: _TOKEN=abc123; other="x y"; _DEVGRANT=dev
+Authorization: Digest username="fuzz", realm="CUPS", nonce="n"
+
