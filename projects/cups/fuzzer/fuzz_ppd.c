@@ -55,7 +55,7 @@
        width,
        length;
    cups_option_t *options = NULL;
-   _ppd_cache_t *pc,
+   _ppd_cache_t *pc = NULL,
                 *pc2;
    ppd_choice_t *ppd_bin;
    ppd_attr_t *attr;
@@ -64,58 +64,69 @@
              *size;
    cups_page_header2_t header;
    ipp_t *job;
+   char *ppdsize = NULL,
+        *legacy = NULL,
+        *pwg = NULL,
+        *ppdmedia = NULL,
+        *marked_option = NULL,
+        *options_str = NULL;
+   char **cups_options = NULL,
+        **cups_values = NULL;
+   int elem_counter = 0, counter = 0;
+   ppd_file_t *ppd = NULL;
+   int ret = 1;
  
    /*
     * Create and fill variables (options)
     * with fuzz-generated values
     */
  
-   char *ppdsize = strdup(data);
+   ppdsize = strdup(data);
    len -= strlen(ppdsize) + 1;
    if (len <= 0)
-     return 1;
+     goto cleanup;
    data += strlen(ppdsize) + 1;
  
-   char *legacy = strdup(data);
+   legacy = strdup(data);
    len -= strlen(legacy) + 1;
    if (len <= 0)
-     return 1;
+     goto cleanup;
    data += strlen(legacy) + 1;
  
-   char *pwg = strdup(data);
+   pwg = strdup(data);
    len -= strlen(pwg) + 1;
    if (len <= 0)
-     return 1;
+     goto cleanup;
    data += strlen(pwg) + 1;
  
-   char *ppdmedia = strdup(data);
+   ppdmedia = strdup(data);
    len -= strlen(ppdmedia) + 1;
    if (len <= 0)
-     return 1;
+     goto cleanup;
    data += strlen(ppdmedia) + 1;
  
-   char *marked_option = strdup(data);
+   marked_option = strdup(data);
    len -= strlen(marked_option) + 1;
    if (len <= 0)
-     return 1;
+     goto cleanup;
    data += strlen(marked_option) + 1;
    
-   char *options_str = strdup(data);
+   options_str = strdup(data);
    len -= strlen(options_str) + 1;
    if (len <= 0)
-     return 1;
+     goto cleanup;
    data += strlen(options_str) + 1;
  
    char buf[12] = {0};
    if (!strncpy(buf, data, 11))
-     return 1;
+     goto cleanup;
    
    length = atoi(buf);
    data += strlen(buf);
    len -= strlen(buf);
  
    if (!strncpy(buf, data, 11))
-     return (1);
+     goto cleanup;
  
    width = atoi(buf);
    data += strlen(buf);
@@ -129,9 +140,8 @@
     * and ppdInstallableConflict() functions
    */
  
-   char **cups_options = (char **)malloc(sizeof(char *) * 2);
-   char **cups_values = (char **)malloc(sizeof(char *) * 2);
-   int elem_counter = 0, counter = 0;
+   cups_options = (char **)malloc(sizeof(char *) * 2);
+   cups_values = (char **)malloc(sizeof(char *) * 2);
  
    for (int i = 0; i < strlen(options_str); i++)
    {
@@ -169,7 +179,7 @@
      cups_values = (char **)realloc(cups_values, sizeof(char *) * (elem_counter + 1));
    }
    if (len <= 0)
-     return 1;
+     goto cleanup;
    
    /*
     * Create and fill .ppd file
@@ -178,20 +188,18 @@
    
    FILE *fp = fopen(filename, "wb");
    if (!fp)
-     return 1;
+     goto cleanup;
  
    fwrite(data, sizeof(*data), len, fp);
    fclose(fp);
  
-   ppd_file_t *ppd = NULL; 
-   
    if ((ppd = ppdOpenFile(filename)) == NULL)
    {
      ppd_status_t err; /* Last error in file */
      int line;         /* Line number in file */
      ppdLastError(&line);
      ppdErrorString(err);
-     return 1;
+     goto cleanup;
    }
    
    pc = _ppdCacheCreateWithPPD(NULL, ppd);
@@ -260,6 +268,9 @@
    ppdPageSizeLimits(ppd, &minsize, &maxsize);
    ppdPageSize(ppd, NULL);
  
+   ret = 0;
+ 
+ cleanup:
    for (int i = 0; i < elem_counter; i++)
    {
      free(cups_options[i]);
@@ -270,8 +281,10 @@
    free(cups_values);
  
    cupsFreeOptions(num_options, options);
-   _ppdCacheDestroy(pc);
-   ppdClose(ppd);
+   if (pc)
+     _ppdCacheDestroy(pc);
+   if (ppd)
+     ppdClose(ppd);
    
    free(options_str);
    free(ppdsize);
@@ -279,7 +292,7 @@
    free(legacy);
    free(pwg);
    free(ppdmedia);
-   return 0;
+   return ret;
  }
  
  void unlink_tempfile(void)
