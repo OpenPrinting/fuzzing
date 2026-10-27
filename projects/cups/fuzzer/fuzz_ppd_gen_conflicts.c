@@ -35,14 +35,16 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
     cupsMarkOptions(ppd, num_options, options);
 
     // Check for conflicts with specific options and choices
-    cupsGetConflicts(ppd, "SampleOption", "SampleChoice", &options);
+    cups_option_t *possible_conflict_options = NULL;
+    int num_possible_conflicts = cupsGetConflicts(ppd, "SampleOption", "SampleChoice", &possible_conflict_options);
 
     // Resolve conflicts with specific options and choices
     int num_resolved_options = num_options;
     cupsResolveConflicts(ppd, "SampleOption", "SampleChoice", &num_resolved_options, &options);
 
     // Free options
-    cupsFreeOptions(num_options, options);
+    cupsFreeOptions(num_resolved_options, options);
+    cupsFreeOptions(num_possible_conflicts, possible_conflict_options);
 
     // Close the PPD file
     ppdClose(ppd);
